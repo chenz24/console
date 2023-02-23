@@ -45,6 +45,7 @@ const {
 
 const {
   renderView,
+  renderConsoleV3View,
   renderTerminal,
   renderLogin,
   renderLoginConfirm,
@@ -82,6 +83,9 @@ router
 
   // oauth
   .get('/oauth/redirect/:name', handleOAuthLogin)
+
+  // v3 entry
+  .get('/consolev3/*', renderConsoleV3View)
 
   // terminal
   .get('/terminal*', renderTerminal)

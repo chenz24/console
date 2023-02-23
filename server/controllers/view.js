@@ -60,6 +60,30 @@ const renderView = async ctx => {
   }
 }
 
+const renderConsoleV3View = async ctx => {
+  try {
+    const clusterRole = await getClusterRole(ctx)
+    const ksConfig = await getKSConfig()
+
+    const [user, runtime, supportGpuType, gitopsEngine] = await Promise.all([
+      getCurrentUser(ctx, clusterRole, ksConfig.multicluster),
+      getK8sRuntime(ctx),
+      getSupportGpuList(ctx),
+      getGitOpsEngine(ctx),
+    ])
+
+    await renderIndex(ctx, {
+      ksConfig,
+      user,
+      runtime,
+      clusterRole,
+      config: { ...clientConfig, supportGpuType, gitopsEngine },
+    })
+  } catch (err) {
+    renderViewErr(ctx, err)
+  }
+}
+
 const renderLogin = async ctx => {
   const referer = ctx.querystring.split('referer=')[1]
 
@@ -166,6 +190,7 @@ const renderViewErr = async (ctx, err) => {
 
 module.exports = {
   renderView,
+  renderConsoleV3View,
   renderTerminal,
   renderLogin,
   renderMarkdown,
