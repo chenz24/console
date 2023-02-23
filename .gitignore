@@ -8,6 +8,7 @@
 
 # production
 /dist
+/v3dist
 
 # misc
 .DS_Store

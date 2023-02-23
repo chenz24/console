@@ -71,7 +71,7 @@ module.exports = {
     new WebpackAssetsManifest({
       entrypoints: true,
       writeToDisk: true,
-      output: '../dist/manifest.json',
+      output: '../v3dist/manifest.json',
     }),
     new WebpackBar(),
   ],
