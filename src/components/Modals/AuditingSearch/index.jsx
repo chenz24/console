@@ -22,12 +22,10 @@ import { observable, action, computed } from 'mobx'
 import { get } from 'lodash'
 
 import EmptyList from 'components/Cards/EmptyList'
-import FullScreen from 'components/Modals/FullscreenModal'
 import Clusters from 'stores/cluster'
 
 import { Home, Detail } from './Auditing'
 
-@FullScreen
 @observer
 export default class AuditingOperating extends React.Component {
   clusters = new Clusters()

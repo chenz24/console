@@ -23,12 +23,10 @@ import { observer } from 'mobx-react'
 import { observable, computed, action } from 'mobx'
 import { get, assign } from 'lodash'
 import EmptyList from 'components/Cards/EmptyList'
-import FullScreen from 'components/Modals/FullscreenModal'
 import Clusters from 'stores/cluster'
 
 import { Home, Search, Detail } from './Logging'
 
-@FullScreen
 @observer
 export default class LogSearchModal extends React.Component {
   static propTypes = {

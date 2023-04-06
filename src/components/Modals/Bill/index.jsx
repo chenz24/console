@@ -22,7 +22,6 @@ import { observer } from 'mobx-react'
 import { action, observable } from 'mobx'
 import { isEmpty, set } from 'lodash'
 
-import Modal from 'components/Base/Modal/modal'
 import EmptyList from 'components/Cards/EmptyList'
 import { Icon } from '@kube-design/components'
 import styles from './index.scss'
@@ -145,24 +144,11 @@ export default class BillModal extends React.Component {
 
   render() {
     const { Component, props } = this.renderContent()
-    const { description, onCancel } = this.props
 
     return (
-      <Modal
-        visible
-        fullScreen
-        hideFooter
-        title={this.renderTitle()}
-        description={description}
-        onCancel={onCancel}
-        className={styles.billContainer}
-        headerClassName={styles.billModalHeader}
-        bodyClassName={styles.billContent}
-      >
-        <div className={styles.bill}>
-          <Component type={this.type} {...props} />
-        </div>
-      </Modal>
+      <div className={styles.bill}>
+        <Component type={this.type} {...props} />
+      </div>
     )
   }
 }

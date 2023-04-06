@@ -37,10 +37,6 @@ export default class FederatedProjectLayout extends Component {
   render() {
     const { route } = this.props
 
-    return (
-      <div className="ks-page">
-        <div className="ks-page-main">{renderRoutes(route.routes)}</div>
-      </div>
-    )
+    return <>{renderRoutes(route.routes)}</>
   }
 }
