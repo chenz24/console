@@ -21,8 +21,6 @@ import { observer, inject } from 'mobx-react'
 
 import { renderRoutes } from 'utils/router.config'
 
-import Banner from 'components/Cards/Banner'
-
 import routes from './routes'
 
 @inject('rootStore')
@@ -38,17 +36,7 @@ class ResourceStatus extends React.Component {
   }
 
   render() {
-    return (
-      <div>
-        <Banner
-          icon="linechart"
-          title={t('APPLICATION_RESOURCE_PL')}
-          description={t('MONITORING_APPLICATION_DESC')}
-          routes={this.routes}
-        />
-        {renderRoutes(routes)}
-      </div>
-    )
+    return <>{renderRoutes(routes)}</>
   }
 }
 

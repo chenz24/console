@@ -278,8 +278,8 @@ export default class GlobalValue {
     if (!this._cache_[`workspace_${workspace}_navs`]) {
       const navs = []
 
-      cloneDeep(globals.config.workspaceNavs).forEach(nav => {
-        const filteredItems = nav.items.filter(item =>
+      cloneDeep(globals.config.workspaceNavs.children).forEach(nav => {
+        const filteredItems = nav.children?.filter(item =>
           this.checkNavItem(item, params =>
             this.hasPermission({ ...params, workspace })
           )
@@ -308,19 +308,32 @@ export default class GlobalValue {
     if (!this._cache_[`project_${cluster}_${project}_navs`]) {
       const navs = []
 
-      cloneDeep(globals.config.projectNavs).forEach(nav => {
-        const filteredItems = nav.items.filter(item => {
-          item.cluster = cluster
-          return this.checkNavItem(item, params =>
-            this.hasPermission({ ...params, cluster, workspace, project })
-          )
-        })
+      // cloneDeep(globals.config.projectNavs.children).forEach(nav => {
+      //   const filteredItems = nav.items.filter(item => {
+      //     item.cluster = cluster
+      //     return this.checkNavItem(item, params =>
+      //       this.hasPermission({ ...params, cluster, workspace, project })
+      //     )
+      //   })
+      //
+      //   if (!isEmpty(filteredItems)) {
+      //     this.checkClusterVersionRequired(filteredItems, cluster)
+      //     navs.push({ ...nav, items: filteredItems })
+      //   }
+      // })
 
-        if (!isEmpty(filteredItems)) {
-          this.checkClusterVersionRequired(filteredItems, cluster)
-          navs.push({ ...nav, items: filteredItems })
-        }
+      // const navs = [];
+      const clusterNavs = cloneDeep(globals.config.projectNavs)
+      const filteredItems = clusterNavs.children.filter(item => {
+        item.cluster = cluster
+        return this.checkNavItem(item, params =>
+          this.hasPermission({ ...params, cluster, workspace, project })
+        )
       })
+      if (!isEmpty(filteredItems)) {
+        this.checkClusterVersionRequired(filteredItems, cluster)
+        navs.push({ ...clusterNavs, children: filteredItems })
+      }
 
       this._cache_[`project_${cluster}_${project}_navs`] = navs
     }

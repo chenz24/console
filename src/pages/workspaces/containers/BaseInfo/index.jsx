@@ -22,7 +22,6 @@ import { toJS } from 'mobx'
 import { observer, inject } from 'mobx-react'
 import { Menu, Icon } from '@kube-design/components'
 import { Text, Panel, Switch } from 'components/Base'
-import Banner from 'components/Cards/Banner'
 import EditBasicInfoModal from 'workspaces/components/Modals/EditBasicInfo'
 import ClusterTitle from 'components/Clusters/ClusterTitle'
 import ManageButton from 'pages/clusters/containers/BaseInfo/ManageButton'
@@ -393,13 +392,6 @@ class BaseInfo extends React.Component {
   render() {
     return (
       <div>
-        <Banner
-          title={t('BASIC_INFORMATION')}
-          icon="cdn"
-          description={t('WORKSPACE_BASIC_INFO_DESC')}
-          tips={this.tips}
-          module={this.module}
-        />
         {this.renderBaseInfo()}
         {this.renderNetwork()}
       </div>

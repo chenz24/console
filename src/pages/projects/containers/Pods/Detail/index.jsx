@@ -57,6 +57,9 @@ export default class PodDetail extends React.Component {
     const referrer = localStorage.getItem('pod-detail-referrer')
 
     if (referrer) {
+      if (referrer.includes('consolev3')) {
+        return referrer.slice(10)
+      }
       return referrer
     }
 

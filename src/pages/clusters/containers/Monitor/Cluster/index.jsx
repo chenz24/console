@@ -20,7 +20,6 @@ import React from 'react'
 import { observer, inject } from 'mobx-react'
 import { Loading } from '@kube-design/components'
 
-import Banner from 'components/Cards/Banner'
 import { renderRoutes } from 'utils/router.config'
 import MonitoringStore from 'stores/monitoring/base'
 
@@ -60,15 +59,7 @@ class ClusterStability extends React.Component {
   render() {
     return (
       <Loading spinning={this.props.rootStore.monitoring.etcdChecking}>
-        <>
-          <Banner
-            icon="linechart"
-            title={t('CLUSTER_STATUS')}
-            description={t('MONITORING_CLUSTER_DESC')}
-            routes={this.routes}
-          />
-          {renderRoutes(routes)}
-        </>
+        {renderRoutes(routes)}
       </Loading>
     )
   }

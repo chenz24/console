@@ -20,8 +20,8 @@ import { lazy } from 'react'
 
 import BaseLayout from 'core/layouts/Base'
 import Login from 'core/containers/Login'
-import LoginConfirm from 'core/containers/LoginConfirm'
-import PasswordConfirm from 'core/containers/PasswordConfirm'
+
+// import Clusters from 'pages/clusters/App'
 
 const Console = lazy(() =>
   import(/* webpackChunkName: "console" */ 'console/App.jsx')
@@ -32,9 +32,9 @@ const Clusters = lazy(() =>
 const AccessControl = lazy(() =>
   import(/* webpackChunkName: "access" */ 'access/App.jsx')
 )
-const Settings = lazy(() =>
-  import(/* webpackChunkName: "settings" */ 'settings/App.jsx')
-)
+// const Settings = lazy(() =>
+//   import(/* webpackChunkName: "settings" */ 'settings/App.jsx')
+// )
 const Workspaces = lazy(() =>
   import(/* webpackChunkName: "workspaces" */ 'workspaces/App.jsx')
 )
@@ -47,12 +47,10 @@ const FederatedProjects = lazy(() =>
 const DevOps = lazy(() =>
   import(/* webpackChunkName: "devops" */ 'devops/App.jsx')
 )
-const App = lazy(() => import(/* webpackChunkName: "apps" */ 'apps/App.jsx'))
+// const App = lazy(() => import(/* webpackChunkName: "apps" */ 'apps/App.jsx'))
 
 export default [
   { path: `/login`, component: Login, exact: true },
-  { path: `/login/confirm`, component: LoginConfirm, exact: true },
-  { path: `/password/confirm`, component: PasswordConfirm, exact: true },
   {
     component: BaseLayout,
     routes: [
@@ -79,18 +77,6 @@ export default [
       {
         path: '/workspaces/:workspace',
         component: Workspaces,
-      },
-      {
-        path: '/apps',
-        component: App,
-      },
-      {
-        path: '/apps-manage',
-        component: App,
-      },
-      {
-        path: '/settings',
-        component: Settings,
       },
       {
         path: '*',

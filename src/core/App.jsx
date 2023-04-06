@@ -23,6 +23,7 @@ import { Provider } from 'mobx-react'
 import { syncHistoryWithStore } from 'mobx-react-router'
 import { renderRoutes } from 'utils/router.config'
 import { lazy } from 'utils'
+import appendSvg from 'utils/svgSpirits'
 
 import RootStore from 'stores/root'
 
@@ -41,15 +42,36 @@ class App extends Component {
 
     this.rootStore = new RootStore()
     this.history = syncHistoryWithStore(
-      createBrowserHistory(),
+      createBrowserHistory({ basename: 'consolev3' }),
       this.rootStore.routing
     )
+  }
+
+  componentWillMount() {
+    if (!document.getElementById('__SVG_SPRITE_NODE__')) {
+      appendSvg()
+      window.iconfont__svg__inject = true
+    }
+  }
+
+  componentWillUnmount() {
+    this.unlisten()
   }
 
   componentDidMount() {
     getActions().then(actions =>
       this.rootStore.registerActions(actions.default)
     )
+
+    window.$wujie?.bus.$on('triggerAction', (name, params) => {
+      if (this.rootStore.actions[name]) {
+        this.rootStore.actions[name].on(params)
+      }
+    })
+
+    this.unlisten = this.history.listen(location => {
+      window.$wujie?.bus.$emit('subRouteChange', 'consolev3', location)
+    })
   }
 
   render() {

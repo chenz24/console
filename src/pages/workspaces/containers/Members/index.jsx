@@ -22,7 +22,6 @@ import UserStore from 'stores/user'
 import RoleStore from 'stores/role'
 
 import { Avatar, Status } from 'components/Base'
-import Banner from 'components/Cards/Banner'
 import Table from 'components/Tables/List'
 import withList, { ListPage } from 'components/HOCs/withList'
 
@@ -183,15 +182,9 @@ export default class Accounts extends React.Component {
   }
 
   render() {
-    const { bannerProps, tableProps } = this.props
+    const { tableProps } = this.props
     return (
       <ListPage {...this.props} noWatch>
-        <Banner
-          {...bannerProps}
-          tabs={this.tabs}
-          title={t('WORKSPACE_MEMBERS')}
-          description={t('WORKSPACE_MEMBER_DESC')}
-        />
         <Table
           {...tableProps}
           tableActions={this.tableActions}

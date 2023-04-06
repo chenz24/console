@@ -238,7 +238,6 @@ export default class Groups extends React.Component {
 
     return (
       <>
-        {this.renderBanner()}
         <div className={styles.wrapper}>
           {this.renderTitle()}
           <div className={styles.content}>

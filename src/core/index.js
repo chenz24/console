@@ -47,17 +47,6 @@ window.onunhandledrejection = function(e) {
   }
 }
 
-// handle safari browser zoom out too small
-window.onresize = () => {
-  const ratio = window.outerHeight / window.innerHeight
-  const ua = navigator.userAgent.toLowerCase()
-  if (ua.indexOf('safari') && ratio < 0.75) {
-    document.body.style.zoom = 1.5
-  } else {
-    document.body.style.zoom = 1
-  }
-}
-
 window.t = i18n.t
 window.request = request
 
@@ -75,7 +64,16 @@ const render = async component => {
   )
 }
 
-render(<App />)
+if (window.__POWERED_BY_WUJIE__) {
+  window.__WUJIE_MOUNT = () => {
+    render(<App />)
+  }
+  window.__WUJIE_UNMOUNT = () => {
+    ReactDOM.unmountComponentAtNode(document.getElementById('root'))
+  }
+} else {
+  render(<App />)
+}
 
 module.hot &&
   module.hot.accept('./App', () => {

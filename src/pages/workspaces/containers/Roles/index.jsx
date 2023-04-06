@@ -20,7 +20,6 @@ import React from 'react'
 import { toJS } from 'mobx'
 
 import { Avatar } from 'components/Base'
-import Banner from 'components/Cards/Banner'
 import Table from 'components/Tables/List'
 import withList, { ListPage } from 'components/HOCs/withList'
 
@@ -156,14 +155,9 @@ export default class Roles extends React.Component {
   }
 
   render() {
-    const { bannerProps, tableProps } = this.props
+    const { tableProps } = this.props
     return (
       <ListPage {...this.props} noWatch>
-        <Banner
-          {...bannerProps}
-          tabs={this.tabs}
-          title={t('WORKSPACE_ROLE_PL')}
-        />
         <Table
           {...tableProps}
           emptyProps={this.emptyProps}

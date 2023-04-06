@@ -1,11 +1,12 @@
 html {
   overflow-y: visible; // overwrite overflow from minireset
-  margin-right: calc(100% - 100vw); // fix jumping scrollbar
+  //margin-right: calc(100% - 100vw); // fix jumping scrollbar
   background-color: $body-bg-color;
   height: 100%;
 }
 
 body {
+  position: relative;
   font-family: $font-family;
   font-size: $body-size;
   color: $text-color;

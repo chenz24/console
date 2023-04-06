@@ -34,10 +34,19 @@ import FORM_TEMPLATES from 'utils/form.templates'
 import FORM_STEPS from 'configs/steps/services'
 
 import ServiceMonitorStore from 'stores/monitoring/service.monitor'
+import ServiceStore from 'stores/service'
 
 export default {
   'service.create': {
-    on({ store, cluster, namespace, module, success, ...props }) {
+    on({
+      store = new ServiceStore(),
+      cluster,
+      namespace,
+      module,
+      success,
+      ...props
+    }) {
+      // if (!store) store = new ServiceStore()
       const kind = MODULE_KIND_MAP[module]
 
       const modal = Modal.open({
@@ -70,7 +79,14 @@ export default {
     },
   },
   'service.simple.create': {
-    on({ store, cluster, namespace, module, success, ...props }) {
+    on({
+      store = new ServiceStore(),
+      cluster,
+      namespace,
+      module,
+      success,
+      ...props
+    }) {
       const kind = MODULE_KIND_MAP[module]
       const formTemplate = {
         [kind]: FORM_TEMPLATES[module]({

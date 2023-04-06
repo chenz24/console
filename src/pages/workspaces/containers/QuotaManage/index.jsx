@@ -21,8 +21,6 @@ import { toJS } from 'mobx'
 import { inject } from 'mobx-react'
 import { get } from 'lodash'
 
-import Banner from 'components/Cards/Banner'
-
 import ResourceQuota from './ResourceQuota'
 
 import styles from './index.scss'
@@ -63,11 +61,6 @@ class QuotaManage extends React.Component {
     const clusters = toJS(this.store.clusters.data)
     return (
       <div>
-        <Banner
-          icon="cdn"
-          title={t('WORKSPACE_QUOTA_PL')}
-          description={t('WORKSPACE_QUOTAS_DESC')}
-        />
         <div className={styles.title}>{t('RESOURCE_QUOTA_PL')}</div>
         {clusters.map(cluster => (
           <ResourceQuota

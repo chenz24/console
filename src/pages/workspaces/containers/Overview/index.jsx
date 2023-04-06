@@ -60,7 +60,6 @@ class WorkspaceOverview extends React.Component {
 
     return (
       <div className={styles.wrapper}>
-        {this.renderBanner()}
         <div className={styles.main}>{renderRoutes(route.routes)}</div>
       </div>
     )
