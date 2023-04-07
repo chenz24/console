@@ -20,7 +20,7 @@ import React from 'react'
 
 import { computed } from 'mobx'
 import { Avatar, Status } from 'components/Base'
-import Banner from 'components/Cards/Banner'
+// import Banner from 'components/Cards/Banner'
 import Table from 'workspaces/components/ResourceTable'
 import withList, { ListPage } from 'components/HOCs/withList'
 import ClusterWrapper from 'components/Clusters/ClusterWrapper'
@@ -186,17 +186,10 @@ export default class Projects extends React.Component {
     })
 
   render() {
-    const { bannerProps, tableProps } = this.props
+    const { tableProps } = this.props
 
     return (
       <ListPage {...this.props} module="namespaces" isFederated>
-        <Banner
-          {...bannerProps}
-          tabs={this.tabs}
-          icon="project"
-          title={t('PROJECT_PL')}
-          description={t('PROJECT_DESC')}
-        />
         <Table
           {...tableProps}
           tableActions={this.tableActions}

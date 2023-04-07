@@ -54,7 +54,7 @@ const init = async () => {
   const locales = {}
   const localePath = globals.localeManifest[`locale-${userLang}.json`]
   if (userLang && localePath) {
-    const data = await request.get(`v3dist/${localePath}`)
+    const data = await request.get(`dist/v3dist/${localePath}`)
     locales[userLang] = data
   }
 

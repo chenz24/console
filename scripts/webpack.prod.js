@@ -38,8 +38,8 @@ const config = smp.wrap({
   entry: baseConfig.entry,
   output: {
     filename: '[name].[chunkhash].js',
-    path: root('v3dist/'),
-    publicPath: '/v3dist/',
+    path: root('dist/v3dist/'),
+    publicPath: '/dist/v3dist/',
     chunkFilename: '[id].[chunkhash].js',
   },
   module: {
@@ -129,7 +129,7 @@ const config = smp.wrap({
   }),
   plugins: [
     ...baseConfig.plugins,
-    new CopyPlugin([{ from: root('src/assets'), to: root('v3dist/assets') }]),
+    new CopyPlugin([{ from: root('src/assets'), to: root('dist/v3dist/assets') }]),
     new MiniCssExtractPlugin({
       filename: '[name].[chunkhash].css',
       chunkFilename: '[id].[chunkhash].css',

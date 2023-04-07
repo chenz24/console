@@ -146,7 +146,7 @@ export default class BillModal extends React.Component {
     const { Component, props } = this.renderContent()
 
     return (
-      <div className={styles.bill}>
+      <div className={styles.bill} style={{ padding: '20px' }}>
         <Component type={this.type} {...props} />
       </div>
     )

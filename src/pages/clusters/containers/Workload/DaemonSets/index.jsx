@@ -20,7 +20,6 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 
 import { Avatar } from 'components/Base'
-import Banner from 'components/Cards/Banner'
 import { withClusterList, ListPage } from 'components/HOCs/withList'
 import WorkloadStatus from 'projects/components/WorkloadStatus'
 import StatusReason from 'projects/components/StatusReason'
@@ -214,15 +213,9 @@ export default class DaemonSets extends React.Component {
   }
 
   render() {
-    const { match, bannerProps, tableProps } = this.props
+    const { match, tableProps } = this.props
     return (
       <ListPage {...this.props}>
-        <Banner
-          {...bannerProps}
-          title={t('WORKLOAD_PL')}
-          description={t('WORKLOAD_DESC')}
-          tabs={this.tabs}
-        />
         <ResourceTable
           {...tableProps}
           itemActions={this.itemActions}

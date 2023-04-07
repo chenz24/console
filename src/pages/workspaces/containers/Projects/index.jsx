@@ -22,7 +22,7 @@ import { get } from 'lodash'
 import { Tooltip, Icon } from '@kube-design/components'
 
 import { Avatar, Status } from 'components/Base'
-import Banner from 'components/Cards/Banner'
+// import Banner from 'components/Cards/Banner'
 import Table from 'workspaces/components/ResourceTable'
 import withList, { ListPage } from 'components/HOCs/withList'
 
@@ -275,7 +275,7 @@ export default class Projects extends React.Component {
     })
 
   render() {
-    const { match, bannerProps, tableProps } = this.props
+    const { match, tableProps } = this.props
 
     const matchParams = {
       ...match,
@@ -294,7 +294,6 @@ export default class Projects extends React.Component {
         getData={this.getData}
         module="namespaces"
       >
-        <Banner {...bannerProps} tabs={this.showFederated ? this.tabs : {}} />
         <Table
           {...tableProps}
           itemActions={this.itemActions}

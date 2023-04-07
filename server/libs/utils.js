@@ -177,7 +177,7 @@ const getManifest = entry => {
   if (!manifestCache) {
     let data = {}
     try {
-      const dataStream = fs.readFileSync(root('v3dist/manifest.json'))
+      const dataStream = fs.readFileSync(root('dist/v3dist/manifest.json'))
       data = safeParseJSON(dataStream.toString(), {})
     } catch (error) {}
     manifestCache = get(data, `entrypoints.${entry}`)
@@ -193,7 +193,9 @@ const getLocaleManifest = () => {
   if (!manifestCache) {
     let data = {}
     try {
-      const dataStream = fs.readFileSync(root('v3dist/manifest.locale.json'))
+      const dataStream = fs.readFileSync(
+        root('dist/v3dist/manifest.locale.json')
+      )
       data = safeParseJSON(dataStream.toString(), {})
     } catch (error) {}
     manifestCache = pick(

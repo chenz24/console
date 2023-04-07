@@ -30,7 +30,7 @@ const config = {
   entry: baseConfig.entry,
   output: {
     filename: '[name].js',
-    path: root('v3dist/'),
+    path: root('dist/v3dist/'),
     publicPath: '/',
     pathinfo: false,
   },
@@ -113,7 +113,7 @@ const config = {
       root('node_modules'),
       root('server'),
       root('build'),
-      root('v3dist'),
+      root('dist'),
     ]),
     new webpack.DefinePlugin({
       'process.env.BROWSER': true,

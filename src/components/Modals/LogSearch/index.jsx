@@ -148,11 +148,13 @@ export default class LogSearchModal extends React.Component {
     }
 
     return (
-      <Component
-        clustersOpts={this.clustersOpts}
-        formStepState={this.formStepState}
-        {...props}
-      />
+      <div style={{ height: 'calc(100vh - 100px)' }}>
+        <Component
+          clustersOpts={this.clustersOpts}
+          formStepState={this.formStepState}
+          {...props}
+        />
+      </div>
     )
   }
 }

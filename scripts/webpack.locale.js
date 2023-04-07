@@ -41,15 +41,15 @@ module.exports = {
   entry: entries,
   output: {
     filename,
-    path: root('v3dist/'),
-    publicPath: '/v3dist/',
+    path: root('dist/v3dist/'),
+    publicPath: '/dist/v3dist/',
   },
   plugins: [
-    new LocalePlugin({ output: '../v3dist' }),
+    new LocalePlugin({ output: '../dist/v3dist' }),
     new WebpackAssetsManifest({
       entrypoints: true,
       writeToDisk: true,
-      output: '../v3dist/manifest.locale.json',
+      output: './manifest.locale.json',
     }),
   ],
 }
