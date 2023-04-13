@@ -27,7 +27,7 @@ import Table from 'components/Tables/List'
 import { getLocalTime, getDisplayName } from 'utils'
 
 import CRDAppStore from 'stores/application/crd'
-import Banner from './Banner'
+// import Banner from './Banner'
 
 @withProjectList({
   store: new CRDAppStore(),
@@ -142,10 +142,11 @@ export default class CRDApps extends React.Component {
   }
 
   render() {
-    const { bannerProps, tableProps, match } = this.props
+    const { tableProps } = this.props
+
     return (
       <ListPage {...this.props}>
-        <Banner {...bannerProps} match={match} type={this.type} />
+        {/* <Banner {...bannerProps} match={match} type={this.type} /> */}
         <Table
           {...tableProps}
           {...this.getTableProps()}
