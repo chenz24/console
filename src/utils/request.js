@@ -195,7 +195,11 @@ function handleResponse(response, reject) {
     }
 
     if (window.onunhandledrejection) {
-      window.onunhandledrejection(error)
+      const isMonitoringUrl = response.url?.includes('monitoring.kubesphere.io')
+      const hasMonitoring = globals?.ksConfig?.monitoring
+      if (!(isMonitoringUrl && !hasMonitoring)) {
+        window.onunhandledrejection(error)
+      }
     }
 
     return Promise.reject(error)
