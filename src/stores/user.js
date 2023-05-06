@@ -16,7 +16,7 @@
  * along with KubeSphere Console.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import { get, set, uniq, isArray, intersection } from 'lodash'
+import { get, set, uniq, intersection } from 'lodash'
 import { observable, action } from 'mobx'
 import { Notify } from '@kube-design/components'
 import { safeParseJSON } from 'utils'
@@ -86,44 +86,82 @@ export default class UsersStore extends Base {
   @action
   async fetchRules({ name, ...params }) {
     let module = 'globalroles'
+    let rolebindings = 'globalrolebindings'
+
     if (params.namespace || params.devops) {
       module = 'roles'
+      rolebindings = 'rolebindings'
     } else if (params.workspace) {
       module = 'workspaceroles'
+      rolebindings = 'workspacerolebindings'
     } else if (params.cluster) {
       module = 'clusterroles'
+      rolebindings = 'clusterrolebindings'
     }
 
-    const resp = await request.get(
-      `kapis/iam.kubesphere.io/v1alpha2${this.getPath(params)}/${this.getModule(
-        params
-      )}/${name}/${module}`,
-      {},
-      {},
-      () => {}
+    const roleBindingUrl = `kapis/iam.kubesphere.io/v1beta1/${rolebindings}`
+    const respRoleBindingRes = await request.get(roleBindingUrl, {
+      ...(rolebindings === 'workspacerolebindings'
+        ? {
+            params: {
+              labelSelector: `iam.kubesphere.io/user-ref=${params.name},kubesphere.io/workspace=${params.workspace}`,
+            },
+          }
+        : {}),
+    })
+
+    const rolebindingsName = get(
+      respRoleBindingRes,
+      'items[0].roleRef.name',
+      ''
+    )
+    // 请求 roletemplate 聚合请求
+    const url = `kapis/iam.kubesphere.io/v1beta1${this.getPath(
+      params
+    )}/${module}/${rolebindingsName}`
+
+    const [roleResp, roletemplatesResp] = await Promise.all([
+      request.get(url),
+      request.get('/kapis/iam.kubesphere.io/v1beta1/roletemplates'),
+    ]).catch(() => {
+      return [{}, {}]
+    })
+
+    const ruleList = safeParseJSON(
+      get(
+        roleResp,
+        'metadata.annotations["iam.kubesphere.io/aggregation-roles"]',
+        []
+      ),
+      []
     )
 
+    const roletemplatesList = get(roletemplatesResp, 'items', [])
+
     let rules = {}
-    resp &&
-      resp.forEach(item => {
-        const rule = safeParseJSON(
-          get(
-            item,
-            "metadata.annotations['iam.kubesphere.io/role-template-rules']"
-          ),
-          {}
+
+    if (ruleList.length > 0) {
+      ruleList.forEach(ruleName => {
+        const roletemplate = roletemplatesList.find(
+          rolestemplate => get(rolestemplate, 'metadata.name') === ruleName
         )
 
-        Object.keys(rule).forEach(key => {
+        if (roletemplate) {
+          const key =
+            get(
+              roletemplate,
+              'metadata.labels["iam.kubesphere.io/resource"]'
+            ) || ruleName
+          const actionTemplate = get(
+            roletemplate,
+            'metadata.labels["iam.kubesphere.io/operation"]'
+          )
           rules[key] = rules[key] || []
-          if (isArray(rule[key])) {
-            rules[key].push(...rule[key])
-          } else {
-            rules[key].push(rule[key])
-          }
-          rules[key] = uniq(rules[key])
-        })
+          const actions = [...rules[key], { [ruleName]: actionTemplate }]
+          rules[key] = uniq(actions)
+        }
       })
+    }
 
     switch (module) {
       case 'globaleroles':
