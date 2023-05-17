@@ -16,7 +16,7 @@
  * along with KubeSphere Console.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import { get, uniq, isEmpty, includes, cloneDeep } from 'lodash'
+import { get, uniq, isEmpty, includes, cloneDeep, isString } from 'lodash'
 import { safeParseJSON, compareVersion } from 'utils'
 
 /** A global class for authorization check. */
@@ -39,10 +39,24 @@ export default class GlobalValue {
     }
 
     const adapter = arr => {
-      if (arr.includes('manage')) {
-        return uniq([...arr, 'view', 'edit', 'create', 'delete'])
+      const actions = []
+
+      arr.forEach(item => {
+        if (!isString(item)) {
+          Object.keys(item).forEach(key => {
+            actions.push(key)
+            actions.push(item[key])
+          })
+        } else {
+          actions.push(item)
+        }
+      })
+
+      if (actions.includes('manage')) {
+        return uniq([...actions, 'view', 'edit', 'create', 'delete'])
       }
-      return arr
+
+      return actions
     }
 
     if (project) {

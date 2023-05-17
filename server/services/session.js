@@ -175,21 +175,29 @@ const getUserDetail = async (token, clusterRole, isMulticluster) => {
 
   const { username } = jwtDecode(token)
 
-  const resp = await send_gateway_request({
-    method: 'GET',
-    url: `/kapis/iam.kubesphere.io/v1alpha2/users/${username}`,
-    token,
-  })
+  const [resp, globalsRoleResp] = await Promise.all([
+    send_gateway_request({
+      method: 'GET',
+      url: `/kapis/iam.kubesphere.io/v1alpha2/users/${username}`,
+      token,
+    }),
+    send_gateway_request({
+      method: 'GET',
+      url: `/kapis/iam.kubesphere.io/v1beta1/globalrolebindings/${username}`,
+      token,
+    }).catch(() => {
+      return {}
+    }),
+  ])
 
   if (resp) {
     user = {
       email: get(resp, 'spec.email'),
       lang: get(resp, 'spec.lang'),
       username: get(resp, 'metadata.name'),
-      globalrole: get(
-        resp,
-        'metadata.annotations["iam.kubesphere.io/globalrole"]'
-      ),
+      globalrole: globalsRoleResp
+        ? get(globalsRoleResp, 'roleRef.name')
+        : get(resp, 'metadata.annotations["iam.kubesphere.io/globalrole"]'),
       grantedClusters: get(
         resp,
         'metadata.annotations["iam.kubesphere.io/granted-clusters"]',
@@ -202,7 +210,7 @@ const getUserDetail = async (token, clusterRole, isMulticluster) => {
   }
 
   try {
-    const roles = await getUserGlobalRules(username, token)
+    const roles = await getUserGlobalRules(user.globalrole, token)
 
     if (clusterRole === 'member') {
       roles.users = roles.users.filter(role => role !== 'manage')

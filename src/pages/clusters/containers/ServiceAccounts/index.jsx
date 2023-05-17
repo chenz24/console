@@ -20,7 +20,7 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import { Avatar } from 'components/Base'
 import { withClusterList, ListPage } from 'components/HOCs/withList'
-import Banner from 'components/Cards/Banner'
+// import Banner from 'components/Cards/Banner'
 import ResourceTable from 'clusters/components/ResourceTable'
 
 import { getDisplayName, getLocalTime } from 'utils'
@@ -163,10 +163,9 @@ export default class ServiceAccounts extends React.Component {
   }
 
   render() {
-    const { match, bannerProps, tableProps } = this.props
+    const { match, tableProps } = this.props
     return (
       <ListPage {...this.props}>
-        <Banner {...bannerProps} />
         <ResourceTable
           {...tableProps}
           columns={this.getColumns()}
