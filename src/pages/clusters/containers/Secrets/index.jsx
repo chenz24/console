@@ -20,7 +20,7 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 
 import { Avatar } from 'components/Base'
-import Banner from 'components/Cards/Banner'
+// import Banner from 'components/Cards/Banner'
 import { withClusterList, ListPage } from 'components/HOCs/withList'
 import ResourceTable from 'clusters/components/ResourceTable'
 
@@ -162,10 +162,9 @@ export default class Secrets extends React.Component {
   }
 
   render() {
-    const { match, bannerProps, tableProps } = this.props
+    const { match, tableProps } = this.props
     return (
       <ListPage {...this.props}>
-        <Banner {...bannerProps} />
         <ResourceTable
           {...tableProps}
           itemActions={this.itemActions}
