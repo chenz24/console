@@ -35,6 +35,7 @@ export default path => [
     title: 'MONITORING',
     component: Monitoring,
     exact: true,
+    ksModule: 'monitoring',
   },
   {
     path: `${path}/env`,
@@ -47,6 +48,7 @@ export default path => [
     title: 'CONTAINER_LOGS',
     component: Logs,
     exact: true,
+    ksModule: 'logging',
   },
   getIndexRoute({ path, to: `${path}/resource-status`, exact: true }),
 ]

@@ -159,7 +159,9 @@ export default class ResourceCard extends React.Component {
           <strong>{num}</strong>
           <span>{num === '1' ? t(name) : t(`${name}_PL`)}</span>
         </div>
-        <TinyArea width={330} height={44} bgColor="transparent" {...config} />
+        {globals.app.hasKSModule('monitoring') && (
+          <TinyArea width={330} height={44} bgColor="transparent" {...config} />
+        )}
       </div>
     )
   }

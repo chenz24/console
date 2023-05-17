@@ -213,7 +213,7 @@ export default class ContainerItem extends React.Component {
             ) : (
               <span className={styles.noLink}>{detail.name}</span>
             )}
-            {prefix && !isCreating && (
+            {prefix && !isCreating && globals.app.hasKSModule('logging') && (
               <Tooltip content={t('CONTAINER_LOGS')}>
                 <Icon
                   className="margin-l8"

@@ -41,6 +41,7 @@ export default PATH => [
     title: 'EVENT_PL',
     exact: true,
     component: Events,
+    ksModule: 'events',
   },
   {
     path: `${PATH}/snapshot`,

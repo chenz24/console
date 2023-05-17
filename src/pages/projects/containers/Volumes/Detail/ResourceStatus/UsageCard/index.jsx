@@ -143,6 +143,10 @@ export default class UsageCard extends Component {
   }
 
   renderMonitor() {
+    if (!globals.app.hasKSModule('monitoring')) {
+      return null
+    }
+
     const { data } = this.props.store
 
     const usageRate = get(data, `${METRICS.inodeUtilisation}.data.result`)

@@ -47,6 +47,7 @@ export default PATH => [
     title: 'EVENT_PL',
     exact: true,
     component: Events,
+    ksModule: 'events',
   },
   getIndexRoute({ path: PATH, to: `${PATH}/resource-status`, exact: true }),
 ]
