@@ -158,7 +158,7 @@ export default class Projects extends React.Component {
 
   getColumns = () => {
     const { getSortOrder, prefix } = this.props
-    return [
+    const columns = [
       {
         title: t('NAME'),
         dataIndex: 'name',
@@ -188,35 +188,40 @@ export default class Projects extends React.Component {
         dataIndex: 'workspace',
         isHideable: true,
       },
-      {
-        title: t('CPU_USAGE'),
-        key: 'namespace_cpu_usage',
-        isHideable: true,
-        render: record =>
-          getSuitableValue(
-            this.getLastValue(record, MetricTypes.cpu),
-            'cpu',
-            '-'
-          ),
-      },
-      {
-        title: t('MEMORY_USAGE'),
-        key: 'namespace_memory_usage_wo_cache',
-        isHideable: true,
-        render: record =>
-          getSuitableValue(
-            this.getLastValue(record, MetricTypes.memory),
-            'memory',
-            '-'
-          ),
-      },
-      {
-        title: t('POD_PL'),
-        key: 'namespace_pod_count',
-        isHideable: true,
-        render: record => this.getLastValue(record, MetricTypes.pod),
-      },
     ]
+    if (globals.app.hasKSModule('monitoring')) {
+      columns.push(
+        {
+          title: t('CPU_USAGE'),
+          key: 'namespace_cpu_usage',
+          isHideable: true,
+          render: record =>
+            getSuitableValue(
+              this.getLastValue(record, MetricTypes.cpu),
+              'cpu',
+              '-'
+            ),
+        },
+        {
+          title: t('MEMORY_USAGE'),
+          key: 'namespace_memory_usage_wo_cache',
+          isHideable: true,
+          render: record =>
+            getSuitableValue(
+              this.getLastValue(record, MetricTypes.memory),
+              'memory',
+              '-'
+            ),
+        },
+        {
+          title: t('POD_PL'),
+          key: 'namespace_pod_count',
+          isHideable: true,
+          render: record => this.getLastValue(record, MetricTypes.pod),
+        }
+      )
+    }
+    return columns
   }
 
   showCreate = () =>

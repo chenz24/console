@@ -304,6 +304,10 @@ class ResourceUsage extends React.Component {
   }
 
   renderHeader() {
+    if (!globals.app.hasKSModule('monitoring')) {
+      return null
+    }
+
     return (
       <div className={styles.header}>
         <RadioGroup

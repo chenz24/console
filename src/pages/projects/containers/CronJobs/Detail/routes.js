@@ -35,6 +35,12 @@ export default path => [
     component: Metadata,
     exact: true,
   },
-  { path: `${path}/events`, title: 'EVENT_PL', component: Events, exact: true },
+  {
+    path: `${path}/events`,
+    title: 'EVENT_PL',
+    component: Events,
+    exact: true,
+    ksModule: 'monitoring',
+  },
   getIndexRoute({ path, to: `${path}/records`, exact: true }),
 ]

@@ -30,6 +30,7 @@ export default PATH => [
     title: 'MONITORING',
     component: Monitoring,
     exact: true,
+    ksModule: 'monitoring',
   },
   {
     path: `${PATH}/gateway-configs`,
@@ -42,6 +43,7 @@ export default PATH => [
     title: 'GATEWAY_LOGS',
     component: GatewayLog,
     exact: true,
+    ksModule: 'logging',
   },
   {
     path: `${PATH}/resource-status`,

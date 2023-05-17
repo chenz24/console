@@ -49,6 +49,7 @@ export default path => [
     title: 'MONITORING',
     component: Monitoring,
     exact: true,
+    ksModule: 'monitoring',
   },
   {
     path: `${path}/env`,
@@ -56,6 +57,12 @@ export default path => [
     component: EnvVariables,
     exact: true,
   },
-  { path: `${path}/events`, title: 'EVENT_PL', component: Events, exact: true },
+  {
+    path: `${path}/events`,
+    title: 'EVENT_PL',
+    component: Events,
+    exact: true,
+    ksModule: 'events',
+  },
   getIndexRoute({ path, to: `${path}/resource-status`, exact: true }),
 ]

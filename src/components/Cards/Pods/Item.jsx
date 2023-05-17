@@ -211,6 +211,10 @@ export default class PodItem extends React.PureComponent {
   renderMonitorings() {
     const { metrics = {}, isExpand, loading } = this.props
 
+    if (!globals.app.hasKSModule('monitoring')) {
+      return null
+    }
+
     if (loading) return <div className={styles.monitors}>{t('LOADING')}</div>
 
     if (isEmpty(metrics.cpu) && isEmpty(metrics.memory))

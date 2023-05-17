@@ -37,6 +37,7 @@ export default [
     path: `${PATH}/gateway`,
     title: 'GATEWAY',
     component: Gateway,
+    ksModule: 'gateway',
     exact: true,
   },
   {
