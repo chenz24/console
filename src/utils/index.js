@@ -572,6 +572,17 @@ export const getClusterUrl = url => {
       : `/${match[1]}/${match[2]}/${match[4]}`
   }
 
+  requestURL.replace(/\/\/+/, '/')
+
+  const clusterReg = new RegExp(/\/(api|apis|kapis)\/(clusters\/[^/]*)\/(.*)/)
+  const clusterMatch = requestURL.match(clusterReg)
+
+  if (clusterMatch && clusterMatch.length === 4) {
+    if (clusterMatch[1].indexOf('monitoring.kubesphere.io') < 0) {
+      requestURL = `/${clusterMatch[2]}/${clusterMatch[1]}/${clusterMatch[3]}`
+    }
+  }
+
   return requestURL.replace(/\/\/+/, '/')
 }
 
