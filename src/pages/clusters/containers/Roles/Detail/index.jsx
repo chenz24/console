@@ -38,7 +38,7 @@ export default class RoleDetail extends React.Component {
 
   componentDidMount() {
     this.fetchData()
-    this.store.fetchRoleTemplates(this.props.match.params)
+    this.store.fetchRoleTemplates('cluster')
   }
 
   get module() {

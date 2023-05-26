@@ -35,7 +35,7 @@ import RoleStore from 'stores/role'
 })
 export default class Roles extends React.Component {
   componentDidMount() {
-    this.props.store.fetchRoleTemplates(this.props.match.params)
+    this.props.store.fetchRoleTemplates('namespace')
   }
 
   showAction = record => !globals.config.presetRoles.includes(record.name)
@@ -148,6 +148,7 @@ export default class Roles extends React.Component {
 
   render() {
     const { bannerProps, tableProps } = this.props
+
     return (
       <ListPage {...this.props} noWatch>
         <Banner

@@ -32,7 +32,7 @@ export default class GroupStore extends Base {
   rowTreeData = {}
 
   get apiVersion() {
-    return 'kapis/iam.kubesphere.io/v1alpha2'
+    return 'kapis/iam.kubesphere.io/v1beta1'
   }
 
   getPath({ cluster, workspace, namespace, devops }) {
@@ -58,13 +58,13 @@ export default class GroupStore extends Base {
   }
 
   getResourceUrl = (params = {}) =>
-    `kapis/iam.kubesphere.io/v1alpha2${this.getPath(params)}/groups`
+    `${this.apiVersion}${this.getPath(params)}/groups`
 
   getDetailUrl = (params = {}) =>
     `${this.getResourceUrl(params)}/${params.name}`
 
   getWatchListUrl = ({ workspace, ...params }) => {
-    return `apis/iam.kubesphere.io/v1alpha2/watch${this.getPath(
+    return `apis/iam.kubesphere.io/v1beta1/watch${this.getPath(
       params
     )}/groups?labelSelector=kubesphere.io/workspace=${workspace}`
   }
@@ -355,7 +355,7 @@ export default class GroupStore extends Base {
   @action
   addWorksapceRoleBinding(data, params = {}) {
     return request.post(
-      `${this.apiVersion}${this.getPath(params)}/workspacerolebindings`,
+      `${this.apiVersion}${this.getPath(params)}/workspacemembers`,
       data
     )
   }
@@ -363,14 +363,14 @@ export default class GroupStore extends Base {
   @action
   deleteWorksapceRoleBinding(name, params = {}) {
     return request.delete(
-      `${this.apiVersion}${this.getPath(params)}/workspacerolebindings/${name}`
+      `${this.apiVersion}${this.getPath(params)}/workspacemembers/${name}`
     )
   }
 
   @action
   addRolebindings(data, params = {}) {
     return request.post(
-      `${this.apiVersion}${this.getPath(params)}/rolebindings`,
+      `${this.apiVersion}${this.getPath(params)}/namespacemembers`,
       data
     )
   }
@@ -378,7 +378,7 @@ export default class GroupStore extends Base {
   @action
   deleteRolebindings(name, params = {}) {
     return request.delete(
-      `${this.apiVersion}${this.getPath(params)}/rolebindings/${name}`
+      `${this.apiVersion}${this.getPath(params)}/namespacemembers/${name}`
     )
   }
 
@@ -406,7 +406,7 @@ export default class GroupStore extends Base {
         cluster,
         workspace,
         namespace,
-      })}/workspacerolebindings`,
+      })}/workspacemembers`,
       params
     )
   }
@@ -414,7 +414,7 @@ export default class GroupStore extends Base {
   @action
   getRoleBinding(group, params = {}) {
     return request.get(
-      `${this.apiVersion}${this.getPath(params)}/rolebindings`,
+      `${this.apiVersion}${this.getPath(params)}/namespacemembers`,
       {
         labelSelector: `iam.kubesphere.io/group-ref=${group}`,
       }

@@ -18,32 +18,42 @@
 
 import React from 'react'
 
+import { getBrowserLang } from 'utils'
+import { get } from 'lodash'
+import cookie from 'utils/cookie'
+
 import styles from './index.scss'
 
 export default class RuleList extends React.Component {
   render() {
-    const { templates } = this.props
+    const { templates, roleCategory = [] } = this.props
+    const lang = cookie('lang') || getBrowserLang()
 
     return (
       <ul className={styles.wrapper} data-test="rule-list">
-        {Object.keys(templates).map(key => (
-          <li key={key}>
-            <div className={styles.name}>
-              {t(`PERMIGROUP_${key.toUpperCase().replace(/[^A-Z]+/g, '_')}`)}
-            </div>
-            <div>
-              {templates[key]
-                .map(role =>
-                  t(
-                    `PERMISSION_${role.aliasName
-                      .toUpperCase()
-                      .replace(/[^A-Z]+/g, '_')}`
+        {Object.keys(templates).map(key => {
+          const templateCategoryName = get(
+            templates[key],
+            `[0].labels["iam.kubesphere.io/category"]`
+          )
+
+          const categoryName = roleCategory.find(
+            item => item.name === templateCategoryName
+          )?.displayName?.[lang]
+
+          return (
+            <li key={key}>
+              <div className={styles.name}>{categoryName}</div>
+              <div>
+                {templates[key]
+                  .map(role =>
+                    get(role, `_originData.spec.displayName[${lang}]`)
                   )
-                )
-                .join('  |  ')}
-            </div>
-          </li>
-        ))}
+                  .join('  |  ')}
+              </div>
+            </li>
+          )
+        })}
       </ul>
     )
   }

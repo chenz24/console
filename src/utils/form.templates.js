@@ -318,13 +318,13 @@ const getClusterRoleTemplate = () => ({
 })
 
 const getGlobalRoleTemplate = () => ({
-  apiVersion: 'iam.kubesphere.io/v1alpha2',
+  apiVersion: 'iam.kubesphere.io/v1beta1',
   kind: 'GlobalRole',
   rules: [],
 })
 
 const getWorkspaceRoleTemplate = () => ({
-  apiVersion: 'iam.kubesphere.io/v1alpha2',
+  apiVersion: 'iam.kubesphere.io/v1beta1',
   kind: 'WorkspaceRole',
   rules: [],
 })

@@ -30,23 +30,25 @@ export default class AuthorizationList extends React.Component {
   store = this.props.detailStore
 
   componentDidMount() {
-    this.fetchRoleTemplatesToDetail()
+    this.init()
   }
 
-  fetchRoleTemplatesToDetail = async () => {
-    await this.store.fetchRoleTemplatesToDetail(this.props.match.params)
+  init = async () => {
+    const categoryModule = this.store.module.replace('roles', '')
+    await this.store.fetchTemplatesCategory(categoryModule)
+    await this.store.fetchRoleTemplates('global')
   }
 
   render() {
-    const { detail, roleTemplatesDetail, isLoading } = toJS(this.store)
+    const { detail, roleCategory, roleTemplates, isLoading } = toJS(this.store)
 
     const templates = groupBy(
-      roleTemplatesDetail.data.filter(
+      roleTemplates.data.filter(
         rt =>
-          get(rt, 'annotations["iam.kubesphere.io/module"]') &&
-          detail.roleTemplates.includes(rt.name)
+          get(rt, 'labels["iam.kubesphere.io/category"]') &&
+          detail?.roleTemplates.includes(rt.name)
       ),
-      'annotations["iam.kubesphere.io/module"]'
+      'labels["iam.kubesphere.io/category"]'
     )
 
     return (
@@ -56,7 +58,7 @@ export default class AuthorizationList extends React.Component {
         loading={isLoading}
         isEmpty={Object.keys(templates).length <= 0}
       >
-        <RuleList templates={templates} />
+        <RuleList templates={templates} roleCategory={roleCategory} />
       </Card>
     )
   }

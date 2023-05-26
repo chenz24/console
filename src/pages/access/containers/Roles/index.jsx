@@ -37,7 +37,7 @@ import RoleStore from 'stores/role'
 })
 export default class Roles extends React.Component {
   componentDidMount() {
-    this.props.store.fetchRoleTemplates(this.props.match.params)
+    this.props.store.fetchRoleTemplates('global')
   }
 
   showAction = record => !globals.config.presetGlobalRoles.includes(record.name)

@@ -265,14 +265,14 @@ export default class GlobalValue {
     if (!this._cache_['accessNavs']) {
       const navs = []
 
-      cloneDeep(globals.config.accessNavs).forEach(nav => {
-        const filteredItems = nav.items.filter(item =>
-          this.checkNavItem(item, params => this.hasPermission(params))
-        )
-        if (!isEmpty(filteredItems)) {
-          navs.push({ ...nav, items: filteredItems })
-        }
-      })
+      // cloneDeep(globals.config.accessNavs).children.forEach(nav => {
+      //   const filteredItems = nav.filter(item =>
+      //     this.checkNavItem(item, params => this.hasPermission(params))
+      //   )
+      //   if (!isEmpty(filteredItems)) {
+      //     navs.push({ ...nav, items: filteredItems })
+      //   }
+      // })
 
       this._cache_['accessNavs'] = navs
     }
