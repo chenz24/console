@@ -39,6 +39,7 @@ export default class RoleDetail extends React.Component {
   componentDidMount() {
     this.fetchData()
     this.store.fetchRoleTemplates('workspace')
+    this.store.fetchTemplatesCategory('workspace')
   }
 
   get module() {
@@ -98,6 +99,7 @@ export default class RoleDetail extends React.Component {
           module: this.module,
           detail: toJS(this.store.detail),
           roleTemplates: toJS(this.store.roleTemplates.data),
+          roleModules: toJS(this.store.roleCategory),
           success: this.fetchData,
         }),
     },

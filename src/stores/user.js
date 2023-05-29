@@ -89,7 +89,7 @@ export default class UsersStore extends Base {
     let module = 'globalroles'
     let urlParams = ''
     if (params.namespace || params.devops) {
-      module = 'namespaceroles'
+      module = 'roles'
       urlParams = `scope=namespace&namespace=${params.namespace}`
     } else if (params.workspace) {
       module = 'workspaceroles'
@@ -100,7 +100,10 @@ export default class UsersStore extends Base {
     }
 
     const roletemplatesUrl = `/kapis/iam.kubesphere.io/v1beta1/users/${globals.user?.username}/roletemplates?${urlParams}`
-    const resRoleTemplates = await request.get(roletemplatesUrl)
+    const resRoleTemplates = await request.get(roletemplatesUrl, {}, {}, () => {
+      return []
+    })
+
     const roletemplatesList = get(resRoleTemplates, 'items', [])
 
     let rules = {}

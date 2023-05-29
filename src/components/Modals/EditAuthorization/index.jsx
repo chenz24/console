@@ -16,17 +16,16 @@
  * along with KubeSphere Console.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import { get, cloneDeep, keyBy, groupBy, sortBy, uniq } from 'lodash'
+import { get, keyBy, groupBy, sortBy, uniq } from 'lodash'
 import React from 'react'
 import classNames from 'classnames'
 import { observer } from 'mobx-react'
 import PropTypes from 'prop-types'
 
 import { Modal, Text, Indicator } from 'components/Base'
-
-import { ROLE_MODULES } from './constants'
+import { getBrowserLang } from 'utils'
 import CheckItem from './CheckItem'
-
+import { ROLE_MODULES_ICON } from './constants'
 import styles from './index.scss'
 
 @observer
@@ -51,38 +50,48 @@ export default class EditAuthorizationModal extends React.Component {
     super(props)
 
     const roleTemplatesMap = keyBy(this.props.roleTemplates, 'name')
-    const roleTemplates = props.formTemplate.roleTemplates || []
-    const roleModules = cloneDeep(ROLE_MODULES[props.module])
-      .filter(item => !item.hide)
-      .map(item => ({
+    const roleTemplates = get(
+      this.props.formTemplate,
+      'aggregationRoleTemplates.templateNames',
+      []
+    )
+
+    const roleModulesLists = this.props.roleModules?.map(item => {
+      return {
         ...item,
-        state: roleTemplates.some(
-          name =>
+        icon: ROLE_MODULES_ICON[item.name] || 'templet',
+        state: roleTemplates.some(name => {
+          return (
             get(
               roleTemplatesMap[name],
-              'annotations["iam.kubesphere.io/module"]'
+              'labels["iam.kubesphere.io/category"]'
             ) === item.name
-        )
+          )
+        })
           ? 'ENABLED'
           : 'NOT_ENABLED',
-      }))
+      }
+    })
+
+    const groupedTemplates = groupBy(
+      this.props.roleTemplates,
+      'labels["iam.kubesphere.io/category"]'
+    )
 
     this.state = {
       roleTemplates,
-      roleModules,
+      roleModules: roleModulesLists,
       roleTemplatesMap,
-      currentModule: roleModules[0].name,
-      groupedTemplates: groupBy(
-        this.props.roleTemplates,
-        'annotations["iam.kubesphere.io/module"]'
-      ),
+      currentModule:
+        roleModulesLists && roleModulesLists.length > 0
+          ? roleModulesLists[0].name
+          : '',
+      groupedTemplates,
     }
   }
 
   handleOk = () => {
-    this.props.onOk(
-      uniq([...this.state.roleTemplates, 'role-template-view-basic'])
-    )
+    this.props.onOk(uniq([...this.state.roleTemplates]))
   }
 
   handleTabChange = e => {
@@ -107,6 +116,7 @@ export default class EditAuthorizationModal extends React.Component {
 
   renderTabs() {
     const { roleModules, currentModule } = this.state
+    const lang = get(globals.user, 'lang') || getBrowserLang()
 
     return (
       <div className={styles.tabs}>
@@ -123,11 +133,7 @@ export default class EditAuthorizationModal extends React.Component {
             >
               <Text
                 icon={item.icon}
-                title={t(
-                  `PERMIGROUP_${item.name
-                    .toUpperCase()
-                    .replace(/[^A-Z]+/g, '_')}`
-                )}
+                title={item.displayName[lang] || item.displayName.en}
                 description={
                   currentModule === item.name
                     ? t('CURRENT')
@@ -154,7 +160,7 @@ export default class EditAuthorizationModal extends React.Component {
       roleTemplatesMap,
       currentModule,
     } = this.state
-    const templates = sortBy(groupedTemplates[currentModule] || [], 'aliasName')
+    const templates = sortBy(groupedTemplates[currentModule] || [], 'name')
 
     return (
       <div className={styles.content}>

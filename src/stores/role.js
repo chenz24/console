@@ -27,7 +27,6 @@ import List from 'stores/base.list'
 export default class RoleStore extends Base {
   roleTemplates = new List()
 
-  // roleTemplatesDetail = new List()
   @observable
   roleCategory = []
 
@@ -95,10 +94,14 @@ export default class RoleStore extends Base {
       {
         ...params,
         annotation: 'kubesphere.io/creator',
+      },
+      {},
+      () => {
+        return { items: [] }
       }
     )
 
-    const data = result.items.map(item => ({
+    const data = result?.items?.map(item => ({
       cluster,
       workspace,
       ...this.mapper(item, devops ? 'devopsroles' : this.module),
@@ -178,23 +181,6 @@ export default class RoleStore extends Base {
       isLoading: false,
     })
   }
-
-  // @action
-  // async fetchRoleTemplatesToDetail(params) {
-  //   this.roleTemplatesDetail.isLoading = true
-
-  //   const result = await request.get(
-  //     `kapis/iam.kubesphere.io/v1beta1${this.getPath(params)}/${
-  //       this.module
-  //     }?labelSelector=iam.kubesphere.io/role-template`
-  //   )
-
-  //   this.roleTemplatesDetail.update({
-  //     data: get(result, 'items', []).map(this.mapper),
-  //     total: result.totalItems || result.total_count || 0,
-  //     isLoading: false,
-  //   })
-  // }
 
   @action
   delete({ cluster, name, workspace, namespace }) {

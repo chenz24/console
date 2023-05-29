@@ -37,6 +37,7 @@ import RoleStore from 'stores/role'
 export default class Roles extends React.Component {
   componentDidMount() {
     this.props.store.fetchRoleTemplates('workspace')
+    this.props.store.fetchTemplatesCategory('workspace')
   }
 
   get workspace() {
@@ -74,6 +75,7 @@ export default class Roles extends React.Component {
             module,
             detail: item,
             roleTemplates: toJS(store.roleTemplates.data),
+            roleModules: toJS(store.roleCategory),
             success: routing.query,
           }),
       },
@@ -144,6 +146,7 @@ export default class Roles extends React.Component {
       title: t('CREATE_WORKSPACE_ROLE'),
       roleTemplates: toJS(store.roleTemplates.data),
       workspace: match.params.workspace,
+      roleModules: toJS(store.roleCategory),
       success: getData,
     })
   }

@@ -19,7 +19,7 @@
 import { lazy } from 'react'
 
 import BaseLayout from 'core/layouts/Base'
-// import Login from 'core/containers/Login'
+import Login from 'core/containers/Login'
 
 // import Clusters from 'pages/clusters/App'
 
@@ -50,7 +50,7 @@ const DevOps = lazy(() =>
 // const App = lazy(() => import(/* webpackChunkName: "apps" */ 'apps/App.jsx'))
 
 export default [
-  // { path: `/login`, component: Login, exact: true },
+  { path: `/login`, component: Login, exact: true },
   {
     component: BaseLayout,
     routes: [

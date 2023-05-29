@@ -18,7 +18,7 @@
 
 export const formatTreeData = (treeData, rootName) => {
   return treeData
-    .map(item => {
+    ?.map(item => {
       const parent = item
       parent.children = []
       parent.path = [rootName, parent.group_name]
@@ -48,7 +48,7 @@ export const flattenTreeData = treeData => {
       treeMap[data.group_id] = data
     }
 
-    if (data.children.length > 0) {
+    if (data?.children?.length > 0) {
       return data.children.map(item => walk(item))
     }
   }

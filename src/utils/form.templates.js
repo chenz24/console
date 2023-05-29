@@ -303,7 +303,7 @@ const getHorizontalPodAutoscalerTemplate = ({ name, namespace, target }) => ({
 })
 
 const getRoleTemplate = ({ namespace }) => ({
-  apiVersion: 'rbac.authorization.k8s.io/v1',
+  apiVersion: 'iam.kubesphere.io/v1beta1',
   kind: 'Role',
   metadata: {
     namespace,
@@ -312,7 +312,7 @@ const getRoleTemplate = ({ namespace }) => ({
 })
 
 const getClusterRoleTemplate = () => ({
-  apiVersion: 'rbac.authorization.k8s.io/v1',
+  apiVersion: 'iam.kubesphere.io/v1beta1',
   kind: 'ClusterRole',
   rules: [],
 })

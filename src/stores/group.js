@@ -79,7 +79,8 @@ export default class GroupStore extends Base {
     const result = await request.get(
       this.getResourceUrl({ workspace, ...params })
     )
-    const data = get(result, 'items', []).map(item => ({
+
+    const data = get(result, 'items', [])?.map(item => ({
       ...this.mapper(item),
     }))
     this.total = get(result, 'totalItems')
@@ -153,8 +154,8 @@ export default class GroupStore extends Base {
     )
 
     const requests = [
-      this.addWorksapceRoleBinding(
-        [FORM_TEMPLATES['workspacerolebinding']({ name, role: workspaceRole })],
+      this.addWorkspaceRoleBinding(
+        [{ username: name, roleRef: workspaceRole }],
         params
       ),
     ]
@@ -165,12 +166,9 @@ export default class GroupStore extends Base {
         ({ role, ...rest }) =>
           role &&
           requests.push(
-            this.addRolebindings(
-              [FORM_TEMPLATES['rolebinding']({ name, role })],
-              {
-                ...rest,
-              }
-            )
+            this.addRolebindings([{ username: name, roleRef: role }], {
+              ...rest,
+            })
           )
       )
     }
@@ -230,16 +228,16 @@ export default class GroupStore extends Base {
       'metadata.annotations["kubesphere.io/workspace-role"]'
     )
     if (workspaceRole !== oldWorkspaceRole) {
-      const worksapceRoleBindingResult = await this.getWorksapceRoleBinding(
+      const workspaceRoleBindingResult = await this.getWorkspaceRoleBinding(
         name,
         params
       )
-      await this.deleteWorksapceRoleBinding(
-        get(worksapceRoleBindingResult, 'items[0].metadata.name'),
+      await this.deleteWorkspaceRoleBinding(
+        get(workspaceRoleBindingResult, 'items[0].metadata.name'),
         params
       )
       requests.push(
-        this.addWorksapceRoleBinding(
+        this.addWorkspaceRoleBinding(
           [
             FORM_TEMPLATES['workspacerolebinding']({
               name,
@@ -353,7 +351,7 @@ export default class GroupStore extends Base {
   }
 
   @action
-  addWorksapceRoleBinding(data, params = {}) {
+  addWorkspaceRoleBinding(data, params = {}) {
     return request.post(
       `${this.apiVersion}${this.getPath(params)}/workspacemembers`,
       data
@@ -361,7 +359,7 @@ export default class GroupStore extends Base {
   }
 
   @action
-  deleteWorksapceRoleBinding(name, params = {}) {
+  deleteWorkspaceRoleBinding(name, params = {}) {
     return request.delete(
       `${this.apiVersion}${this.getPath(params)}/workspacemembers/${name}`
     )
@@ -393,7 +391,7 @@ export default class GroupStore extends Base {
   }
 
   @action
-  async getWorksapceRoleBinding(
+  async getWorkspaceRoleBinding(
     group,
     { cluster, workspace, namespace, ...rest }
   ) {

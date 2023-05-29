@@ -29,25 +29,16 @@ import RuleList from 'components/Cards/RuleList'
 export default class AuthorizationList extends React.Component {
   store = this.props.detailStore
 
-  componentDidMount() {
-    this.init()
-  }
-
-  init = async () => {
-    const categoryModule = this.store.module.replace('roles', '')
-    await this.store.fetchTemplatesCategory(categoryModule)
-    await this.store.fetchRoleTemplates('global')
-  }
-
   render() {
     const { detail, roleCategory, roleTemplates, isLoading } = toJS(this.store)
 
     const templates = groupBy(
-      roleTemplates.data.filter(
-        rt =>
+      roleTemplates.data.filter(rt => {
+        return (
           get(rt, 'labels["iam.kubesphere.io/category"]') &&
           detail?.roleTemplates.includes(rt.name)
-      ),
+        )
+      }),
       'labels["iam.kubesphere.io/category"]'
     )
 

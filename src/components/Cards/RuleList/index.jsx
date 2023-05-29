@@ -37,17 +37,22 @@ export default class RuleList extends React.Component {
             `[0].labels["iam.kubesphere.io/category"]`
           )
 
-          const categoryName = roleCategory.find(
+          const categoryObject = roleCategory.find(
             item => item.name === templateCategoryName
-          )?.displayName?.[lang]
+          )
+
+          const categoryName =
+            categoryObject.displayName[lang] || categoryObject.displayName.en
 
           return (
             <li key={key}>
               <div className={styles.name}>{categoryName}</div>
               <div>
                 {templates[key]
-                  .map(role =>
-                    get(role, `_originData.spec.displayName[${lang}]`)
+                  .map(
+                    role =>
+                      get(role, `_originData.spec.displayName[${lang}]`) ||
+                      get(role, `_originData.spec.displayName.en`)
                   )
                   .join('  |  ')}
               </div>

@@ -69,8 +69,6 @@ export default {
 
       set(formTemplate, 'metadata.resourceVersion', detail.resourceVersion)
 
-      formTemplate.roleTemplates = detail.roleTemplates
-
       const modal = Modal.open({
         onOk: data => {
           if (!data) {
@@ -80,11 +78,7 @@ export default {
 
           delete formTemplate.roleTemplates
 
-          set(
-            formTemplate,
-            'metadata.annotations["iam.kubesphere.io/aggregation-roles"]',
-            JSON.stringify(data)
-          )
+          set(formTemplate, 'aggregationRoleTemplates.templateNames', data)
 
           store.update(detail, formTemplate).then(() => {
             Modal.close(modal)
