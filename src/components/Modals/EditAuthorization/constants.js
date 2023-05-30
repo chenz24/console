@@ -143,3 +143,17 @@ export const ROLE_MODULES = {
     },
   ],
 }
+
+export const ROLE_MODULES_ICON = {
+  'cluster-management': 'cluster',
+  'access-control': 'key',
+  'apps-management': 'openpitrix',
+  'platforms-settings': 'cogwheel',
+  'projects-management': 'project',
+  'devOps-management': 'strategy-group',
+  'workspace-settings': 'cogwheel',
+  'Application Workloads': 'appcenter',
+  'storage-management': 'storage',
+  'configuration-center': 'hammer',
+  'project-settings': 'project',
+}

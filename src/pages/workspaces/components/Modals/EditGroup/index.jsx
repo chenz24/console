@@ -52,7 +52,7 @@ export default class EditGroupModal extends React.Component {
 
   componentDidMount() {
     const { treeData } = this.props
-    if (get(treeData[0], 'children').length > 0) {
+    if (get(treeData[0], 'children', []).length > 0) {
       this.setState({
         groupId: treeData[0].group_id,
       })

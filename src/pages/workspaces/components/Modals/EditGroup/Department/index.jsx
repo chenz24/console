@@ -34,7 +34,7 @@ export default class Department extends React.Component {
     return (
       <div className={styles.wrapper}>
         <div className={styles.treeWrapper}>
-          {treeData[0].children.length > 0 ? (
+          {treeData[0]?.children?.length > 0 ? (
             <Tree
               className={styles.tree}
               showLine

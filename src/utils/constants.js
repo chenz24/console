@@ -942,7 +942,7 @@ export const API_VERSIONS = {
   storageclasses: 'apis/storage.k8s.io/v1',
   accessors: 'apis/storage.kubesphere.io/v1alpha1',
   validatingwebhookconfigurations: '/apis/admissionregistration.k8s.io/v1',
-  roles: 'apis/rbac.authorization.k8s.io/v1',
+  roles: 'iam.kubesphere.io/v1beta1',
   clusterroles: 'apis/rbac.authorization.k8s.io/v1',
   applications: 'apis/app.k8s.io/v1beta1',
   strategies: 'apis/servicemesh.kubesphere.io/v1alpha2',

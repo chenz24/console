@@ -39,6 +39,7 @@ export default class CreateModal extends React.Component {
     onOk: PropTypes.func,
     onCancel: PropTypes.func,
     isSubmitting: PropTypes.bool,
+    roleModules: PropTypes.array,
   }
 
   static defaultProps = {
@@ -64,8 +65,8 @@ export default class CreateModal extends React.Component {
   handleCreate = roleTemplates => {
     set(
       this.props.formTemplate,
-      'metadata.annotations["iam.kubesphere.io/aggregation-roles"]',
-      JSON.stringify(roleTemplates)
+      'aggregationRoleTemplates.templateNames',
+      roleTemplates
     )
     this.props.onOk(this.props.formTemplate)
   }
@@ -101,6 +102,7 @@ export default class CreateModal extends React.Component {
       formTemplate,
       roleTemplates,
       isSubmitting,
+      roleModules,
     } = this.props
     const { showEditAuthorization } = this.state
 
@@ -111,6 +113,7 @@ export default class CreateModal extends React.Component {
         <EditAuthorization
           module={module}
           visible={showEditAuthorization}
+          roleModules={roleModules}
           formTemplate={formTemplate}
           roleTemplates={roleTemplates}
           onOk={this.handleCreate}

@@ -21,10 +21,21 @@ import { get, isEmpty } from 'lodash'
 
 import { Checkbox, Tag, Notify } from '@kube-design/components'
 import { Text } from 'components/Base'
-
+import { getBrowserLang } from 'utils'
 import styles from './index.scss'
 
 export default class CheckItem extends Component {
+  get lang() {
+    return get(globals.user, 'lang') || getBrowserLang()
+  }
+
+  getName = item => {
+    return (
+      get(item, `_originData.spec.displayName[${this.lang}]`) ||
+      get(item, `_originData.spec.displayName.en`)
+    )
+  }
+
   handleCheck = () => {
     const { roleTemplates, roleTemplatesMap, data, onChange } = this.props
 
@@ -41,13 +52,7 @@ export default class CheckItem extends Component {
         Notify.warning(
           t('DESELECT_RESOURCE_FIRST', {
             resource: relateTemplates
-              .map(rt =>
-                t(
-                  `PERMISSION_${get(roleTemplatesMap, `[${rt}].aliasName`)
-                    .toUpperCase()
-                    .replace(/[^A-Z]+/g, '_')}`
-                )
-              )
+              .map(rt => this.getName(roleTemplatesMap[rt]))
               .join('/'),
           })
         )
@@ -87,14 +92,12 @@ export default class CheckItem extends Component {
 
   render() {
     const { roleTemplates, roleTemplatesMap, data } = this.props
+
     const dependencies =
       data.dependencies.length > 0
         ? data.dependencies
             .map(item => {
-              const aliasName = get(roleTemplatesMap, `[${item}].aliasName`)
-              return aliasName
-                ? aliasName.toUpperCase().replace(/[^A-Z]+/g, '_')
-                : undefined
+              return this.getName(roleTemplatesMap[item])
             })
             .filter(item => item !== undefined)
         : []
@@ -106,24 +109,16 @@ export default class CheckItem extends Component {
           onClick={this.handleCheck}
         />
         <Text
-          title={t(
-            `PERMISSION_${data.aliasName
-              .toUpperCase()
-              .replace(/[^A-Z]+/g, '_')}`
-          )}
+          title={this.getName(data)}
           onClick={this.handleCheck}
-          description={t(
-            `PERMISSION_${data.aliasName
-              .toUpperCase()
-              .replace(/[^A-Z]+/g, '_')}_DESC`
-          )}
+          description={this.getName(data)}
         />
         {dependencies.length > 0 && (
           <div className={styles.extra}>
             {t('DEPENDS_ON')}
             {dependencies.map(aliasName => (
               <Tag className={styles.tag} type="info" key={aliasName}>
-                {t(`PERMISSION_${aliasName}`)}
+                {aliasName}
               </Tag>
             ))}
           </div>

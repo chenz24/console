@@ -17,7 +17,7 @@
  */
 
 import { isEmpty, get } from 'lodash'
-import { action } from 'mobx'
+import { action, observable } from 'mobx'
 import { Notify } from '@kube-design/components'
 import { LIST_DEFAULT_ORDER } from 'utils/constants'
 
@@ -27,7 +27,11 @@ import List from 'stores/base.list'
 export default class RoleStore extends Base {
   roleTemplates = new List()
 
-  roleTemplatesDetail = new List()
+  @observable
+  isLoading = false
+
+  @observable
+  roleCategory = []
 
   getPath({ cluster, workspace, namespace, devops }) {
     let path = ''
@@ -93,10 +97,14 @@ export default class RoleStore extends Base {
       {
         ...params,
         annotation: 'kubesphere.io/creator',
+      },
+      {},
+      () => {
+        return { items: [] }
       }
     )
 
-    const data = result.items.map(item => ({
+    const data = result?.items?.map(item => ({
       cluster,
       workspace,
       ...this.mapper(item, devops ? 'devopsroles' : this.module),
@@ -132,34 +140,49 @@ export default class RoleStore extends Base {
   }
 
   @action
-  async fetchRoleTemplates(params) {
-    this.roleTemplates.isLoading = true
+  fetchTemplatesCategory = async categoryModule => {
+    const labelSelector = `scope.iam.kubesphere.io/${categoryModule}=`
+    const categoryUrl = `kapis/iam.kubesphere.io/v1beta1/categories`
+    this.isLoading = true
 
-    const result = await request.get(
-      `kapis/iam.kubesphere.io/v1alpha2${this.getPath(params)}/${
-        this.module
-      }?label=iam.kubesphere.io/role-template=true`
-    )
-
-    this.roleTemplates.update({
-      data: get(result, 'items', []).map(this.mapper),
-      total: result.totalItems || result.total_count || 0,
-      isLoading: false,
+    const res = await request.get(categoryUrl, {
+      labelSelector,
     })
+
+    let data = []
+
+    if (Array.isArray(res.items)) {
+      data = res.items.map(item => {
+        return {
+          name: get(item, 'metadata.name'),
+          displayName: get(item, 'spec.displayName'),
+        }
+      })
+    }
+    this.roleCategory = data
+    this.isLoading = false
+    return data
   }
 
   @action
-  async fetchRoleTemplatesToDetail(params) {
-    this.roleTemplatesDetail.isLoading = true
+  fetchRoleTemplates = async tempModule => {
+    this.roleTemplates.isLoading = true
 
     const result = await request.get(
-      `kapis/iam.kubesphere.io/v1alpha2${this.getPath(params)}/${
-        this.module
-      }?labelSelector=iam.kubesphere.io/role-template`
+      `kapis/iam.kubesphere.io/v1beta1/roletemplates`,
+      {
+        labelSelector:
+          tempModule === 'global'
+            ? `iam.kubesphere.io/role-template=true`
+            : `scope.iam.kubesphere.io/${tempModule}=,iam.kubesphere.io/role-template=true`,
+      }
+    )
+    const data = get(result, 'items', []).map(item =>
+      this.mapper(item, this.module)
     )
 
-    this.roleTemplatesDetail.update({
-      data: get(result, 'items', []).map(this.mapper),
+    this.roleTemplates.update({
+      data,
       total: result.totalItems || result.total_count || 0,
       isLoading: false,
     })

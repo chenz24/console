@@ -37,7 +37,8 @@ import RoleStore from 'stores/role'
 })
 export default class Roles extends React.Component {
   componentDidMount() {
-    this.props.store.fetchRoleTemplates(this.props.match.params)
+    this.props.store.fetchRoleTemplates('global')
+    this.props.store.fetchTemplatesCategory('global')
   }
 
   showAction = record => !globals.config.presetGlobalRoles.includes(record.name)
@@ -68,6 +69,7 @@ export default class Roles extends React.Component {
             module,
             detail: item,
             roleTemplates: toJS(store.roleTemplates.data),
+            roleModules: toJS(store.roleCategory),
             success: routing.query,
           }),
       },
@@ -136,6 +138,7 @@ export default class Roles extends React.Component {
     return trigger('role.create', {
       title: t('CREATE_PLATFORM_ROLE'),
       roleTemplates: toJS(store.roleTemplates.data),
+      roleModules: toJS(store.roleCategory),
       success: getData,
     })
   }
