@@ -79,7 +79,7 @@ export default class DevOpsStore extends Base {
     `kapis/devops.kubesphere.io/v1alpha3${this.getPath(params)}/`
 
   getDevopsTenantUrl = params =>
-    `kapis/tenant.kubesphere.io/v1alpha2${this.getPath(params)}/devops`
+    `kapis/devops.kubesphere.io/v1alpha3${this.getPath(params)}/devops`
 
   getResourceUrl = params => `${this.getDevopsUrlV2(params)}`
 
@@ -101,7 +101,6 @@ export default class DevOpsStore extends Base {
   @action
   async fetchList({ workspace, cluster, more, ...params } = {}) {
     this.list.isLoading = true
-
     if (params.limit === Infinity || params.limit === -1) {
       params.limit = -1
       params.page = 1
@@ -284,7 +283,6 @@ export default class DevOpsStore extends Base {
     }
 
     params.limit = params.limit || 10
-
     const result = await request.get(
       `kapis/tenant.kubesphere.io/v1alpha2/workspaces/${workspace}${this.getPath(
         { cluster, namespace }

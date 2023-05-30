@@ -82,7 +82,7 @@ export default class ProjectCreateModal extends React.Component {
       label: item.name,
       value: item.name,
       cluster: item,
-      disabled: !item.isReady || !get(item, 'configz.devops', false),
+      // disabled: !item.isReady || !get(item, 'configz.devops', false),
     }))
   }
 
