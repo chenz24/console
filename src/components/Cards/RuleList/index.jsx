@@ -31,24 +31,21 @@ export default class RuleList extends React.Component {
 
     return (
       <ul className={styles.wrapper} data-test="rule-list">
-        {Object.keys(templates).map(key => {
-          const templateCategoryName = get(
-            templates[key],
-            `[0].labels["iam.kubesphere.io/category"]`
-          )
-
-          const categoryObject = roleCategory.find(
-            item => item.name === templateCategoryName
-          )
+        {roleCategory.map(item => {
+          const templateRoles = templates[item.name] || []
 
           const categoryName =
-            categoryObject.displayName[lang] || categoryObject.displayName.en
+            item?.displayName?.[lang] || item?.displayName?.en
+
+          if (templateRoles.length < 1) {
+            return null
+          }
 
           return (
-            <li key={key}>
+            <li key={item.name}>
               <div className={styles.name}>{categoryName}</div>
               <div>
-                {templates[key]
+                {templateRoles
                   .map(
                     role =>
                       get(role, `_originData.spec.displayName[${lang}]`) ||

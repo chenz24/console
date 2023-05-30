@@ -28,6 +28,9 @@ export default class RoleStore extends Base {
   roleTemplates = new List()
 
   @observable
+  isLoading = false
+
+  @observable
   roleCategory = []
 
   getPath({ cluster, workspace, namespace, devops }) {
@@ -140,12 +143,14 @@ export default class RoleStore extends Base {
   fetchTemplatesCategory = async categoryModule => {
     const labelSelector = `scope.iam.kubesphere.io/${categoryModule}=`
     const categoryUrl = `kapis/iam.kubesphere.io/v1beta1/categories`
+    this.isLoading = true
 
     const res = await request.get(categoryUrl, {
       labelSelector,
     })
 
     let data = []
+
     if (Array.isArray(res.items)) {
       data = res.items.map(item => {
         return {
@@ -155,6 +160,7 @@ export default class RoleStore extends Base {
       })
     }
     this.roleCategory = data
+    this.isLoading = false
     return data
   }
 
