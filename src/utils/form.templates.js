@@ -601,7 +601,7 @@ const getServiceMonitorTemplate = ({ name, namespace }) => ({
 
 const getWorkspaceRoleBindingTemplate = ({ name, role }) => ({
   kind: 'WorkspaceRoleBinding',
-  apiVersion: 'iam.kubesphere.io/v1alpha2',
+  apiVersion: 'iam.kubesphere.io/v1beta1',
   subjects: [
     {
       kind: 'Group',
@@ -610,7 +610,7 @@ const getWorkspaceRoleBindingTemplate = ({ name, role }) => ({
     },
   ],
   roleRef: {
-    apiGroup: 'iam.kubesphere.io/v1alpha2',
+    apiGroup: 'iam.kubesphere.io/v1beta1',
     kind: 'WorkspaceRole',
     name: role,
   },
