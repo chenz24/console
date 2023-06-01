@@ -209,7 +209,7 @@ export default class UsersStore extends Base {
   checkEmail(email) {
     return request.get(
       `${this.getListUrl()}`,
-      { email },
+      { 'fieldSelector=spec.email': email },
       {
         headers: { 'x-check-exist': true },
       }
@@ -235,7 +235,7 @@ export default class UsersStore extends Base {
   @action
   async jsonPatch({ name }, data) {
     await this.submitting(
-      request.patch(`apis/iam.kubesphere.io/v1alpha2/users/${name}`, data, {
+      request.patch(`apis/iam.kubesphere.io/v1beta1/users/${name}`, data, {
         headers: {
           'content-type': 'application/json-patch+json',
         },
