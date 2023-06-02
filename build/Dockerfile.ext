@@ -1,0 +1,21 @@
+FROM node:12-alpine3.14 as builder
+
+ARG YARN_VERSION=1.22.4
+
+WORKDIR /kubesphere
+ADD . /kubesphere/
+
+RUN apk add --no-cache --virtual .build-deps ca-certificates python2 python3 py3-pip make openssl g++ bash
+RUN npm install yarn@${YARN_VERSION}
+
+# If you have trouble downloading the yarn binary, try the following:
+# RUN yarn config set registry https://registry.npmmirror.com
+
+RUN yarn && yarn build
+
+# Copy compiled files
+FROM registry.cn-beijing.aliyuncs.com/kse/ks-console:ksc as base_os_context
+
+USER root
+RUN rm -rf /opt/kubesphere/console/dist/v3dist
+COPY --from=builder /kubesphere/dist/v3dist/ /opt/kubesphere/console/dist/v3dist/
