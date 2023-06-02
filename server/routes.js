@@ -71,6 +71,7 @@ router
 
   .all('/(k)?api(s)?/(.*)', checkToken, checkIfExist)
   .use(proxy('/(k)?api(s)?/(.*)', k8sResourceProxy))
+  .use(proxy('(/clusters/[^/]*)?/(k?)api(s?)/(.*)', k8sResourceProxy))
 
   .get('/sample/:app', parseBody, handleSampleData)
 

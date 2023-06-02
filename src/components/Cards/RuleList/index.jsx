@@ -18,32 +18,44 @@
 
 import React from 'react'
 
+import { getBrowserLang } from 'utils'
+import { get } from 'lodash'
+import cookie from 'utils/cookie'
+
 import styles from './index.scss'
 
 export default class RuleList extends React.Component {
   render() {
-    const { templates } = this.props
+    const { templates, roleCategory = [] } = this.props
+    const lang = cookie('lang') || getBrowserLang()
 
     return (
       <ul className={styles.wrapper} data-test="rule-list">
-        {Object.keys(templates).map(key => (
-          <li key={key}>
-            <div className={styles.name}>
-              {t(`PERMIGROUP_${key.toUpperCase().replace(/[^A-Z]+/g, '_')}`)}
-            </div>
-            <div>
-              {templates[key]
-                .map(role =>
-                  t(
-                    `PERMISSION_${role.aliasName
-                      .toUpperCase()
-                      .replace(/[^A-Z]+/g, '_')}`
+        {roleCategory.map(item => {
+          const templateRoles = templates[item.name] || []
+
+          const categoryName =
+            item?.displayName?.[lang] || item?.displayName?.en
+
+          if (templateRoles.length < 1) {
+            return null
+          }
+
+          return (
+            <li key={item.name}>
+              <div className={styles.name}>{categoryName}</div>
+              <div>
+                {templateRoles
+                  .map(
+                    role =>
+                      get(role, `_originData.spec.displayName[${lang}]`) ||
+                      get(role, `_originData.spec.displayName.en`)
                   )
-                )
-                .join('  |  ')}
-            </div>
-          </li>
-        ))}
+                  .join('  |  ')}
+              </div>
+            </li>
+          )
+        })}
       </ul>
     )
   }

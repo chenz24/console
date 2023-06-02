@@ -102,7 +102,7 @@ export default class GroupUser extends Component {
       notingroup: group,
       name: search,
       type: 'notingroup',
-      limit: 10,
+      limit: -1,
     })
   }
 
@@ -113,7 +113,7 @@ export default class GroupUser extends Component {
       ingroup: group,
       name: search,
       type: 'ingroup',
-      limit: 10,
+      limit: -1,
     })
   }
 

@@ -674,14 +674,7 @@ const RoleMapper = (item, kind = 'roles') => ({
     get(item, 'metadata.annotations["iam.kubesphere.io/dependencies"]', ''),
     []
   ),
-  roleTemplates: safeParseJSON(
-    get(
-      item,
-      'metadata.annotations["iam.kubesphere.io/aggregation-roles"]',
-      ''
-    ),
-    []
-  ),
+  roleTemplates: get(item, 'aggregationRoleTemplates.templateNames', []),
   rules: get(item, 'rules'),
   _originData: getOriginData(item),
 })

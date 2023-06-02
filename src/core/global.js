@@ -265,10 +265,11 @@ export default class GlobalValue {
     if (!this._cache_['accessNavs']) {
       const navs = []
 
-      cloneDeep(globals.config.accessNavs).forEach(nav => {
-        const filteredItems = nav.items.filter(item =>
-          this.checkNavItem(item, params => this.hasPermission(params))
+      cloneDeep(globals.config.accessNavs.children).forEach(nav => {
+        const filteredItems = this.checkNavItem(nav, params =>
+          this.hasPermission(params)
         )
+
         if (!isEmpty(filteredItems)) {
           navs.push({ ...nav, items: filteredItems })
         }
@@ -436,7 +437,7 @@ export default class GlobalValue {
   }
 
   get isMultiCluster() {
-    return globals.ksConfig.multicluster
+    return globals.ksConfig.multicluster.clusterRole !== 'none'
   }
 
   hasKSModule(module) {

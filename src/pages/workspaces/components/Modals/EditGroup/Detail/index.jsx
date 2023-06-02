@@ -45,7 +45,7 @@ export default class Detail extends Component {
     this.store = props.store
 
     this.initialFormTemplate = {
-      apiVersion: 'iam.kubesphere.io/v1alpha2',
+      apiVersion: 'iam.kubesphere.io/v1beta1',
       kind: 'Group',
       metadata: {
         annotations: {

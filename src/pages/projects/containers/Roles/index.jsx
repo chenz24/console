@@ -35,7 +35,8 @@ import RoleStore from 'stores/role'
 })
 export default class Roles extends React.Component {
   componentDidMount() {
-    this.props.store.fetchRoleTemplates(this.props.match.params)
+    this.props.store.fetchRoleTemplates('namespace')
+    this.props.store.fetchTemplatesCategory('namespace')
   }
 
   showAction = record => !globals.config.presetRoles.includes(record.name)
@@ -66,6 +67,7 @@ export default class Roles extends React.Component {
           trigger('role.edit', {
             detail: item,
             roleTemplates: toJS(store.roleTemplates.data),
+            roleModules: toJS(store.roleCategory),
             success: routing.query,
           }),
       },
@@ -113,6 +115,7 @@ export default class Roles extends React.Component {
             icon={ICON_TYPES[module]}
             title={name}
             desc={record.aliasName}
+            iconSize={40}
             to={`${this.props.match.url}/${name}`}
           />
         ),
@@ -142,12 +145,14 @@ export default class Roles extends React.Component {
       namespace: match.params.namespace,
       cluster: match.params.cluster,
       roleTemplates: toJS(store.roleTemplates.data),
+      roleModules: toJS(store.roleCategory),
       success: getData,
     })
   }
 
   render() {
     const { bannerProps, tableProps } = this.props
+
     return (
       <ListPage {...this.props} noWatch>
         <Banner

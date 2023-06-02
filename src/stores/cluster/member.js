@@ -26,7 +26,7 @@ export default class ProjectMemberStore extends Base {
   list = new MemberList()
 
   getResourceUrl = ({ namespace }) =>
-    `kapis/iam.kubesphere.io/v1alpha2/namespaces/${namespace}/users`
+    `kapis/iam.kubesphere.io/v1beta1/namespaces/${namespace}/users`
 
   @action
   addMember(namespace, name, role) {
@@ -58,9 +58,7 @@ export default class ProjectMemberStore extends Base {
   deleteMember(namespace, member) {
     return this.submitting(
       request.delete(
-        `apis/rbac.authorization.k8s.io/v1/namespaces/${namespace}/rolebindings/${
-          member.role_binding
-        }`
+        `apis/rbac.authorization.k8s.io/v1/namespaces/${namespace}/rolebindings/${member.role_binding}`
       )
     )
   }
@@ -74,9 +72,7 @@ export default class ProjectMemberStore extends Base {
             user => user.username === rowKey
           )
           return request.delete(
-            `apis/rbac.authorization.k8s.io/v1/namespaces/${namespace}/rolebindings/${
-              member.role_binding
-            }`
+            `apis/rbac.authorization.k8s.io/v1/namespaces/${namespace}/rolebindings/${member.role_binding}`
           )
         })
       )

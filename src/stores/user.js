@@ -16,10 +16,11 @@
  * along with KubeSphere Console.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import { get, set, uniq, intersection } from 'lodash'
+import { get, set, uniq, isArray } from 'lodash'
 import { observable, action } from 'mobx'
 import { Notify } from '@kube-design/components'
 import { safeParseJSON } from 'utils'
+
 import ObjectMapper from 'utils/object.mapper'
 import cookie from 'utils/cookie'
 
@@ -62,7 +63,7 @@ export default class UsersStore extends Base {
 
   getModule({ cluster, workspace, namespace, devops } = {}) {
     if (namespace || devops) {
-      return 'members'
+      return 'namespacemembers'
     }
 
     if (workspace) {
@@ -77,7 +78,7 @@ export default class UsersStore extends Base {
   }
 
   getResourceUrl = (params = {}) =>
-    `kapis/iam.kubesphere.io/v1alpha2${this.getPath(params)}/${this.getModule(
+    `kapis/iam.kubesphere.io/v1beta1${this.getPath(params)}/${this.getModule(
       params
     )}`
 
@@ -86,80 +87,47 @@ export default class UsersStore extends Base {
   @action
   async fetchRules({ name, ...params }) {
     let module = 'globalroles'
-    let rolebindings = 'globalrolebindings'
-
+    let urlParams = ''
     if (params.namespace || params.devops) {
       module = 'roles'
-      rolebindings = 'rolebindings'
+      urlParams = `scope=namespace&namespace=${params.namespace}`
     } else if (params.workspace) {
       module = 'workspaceroles'
-      rolebindings = 'workspacerolebindings'
+      urlParams = `scope=workspace&workspace=${params.workspace}`
     } else if (params.cluster) {
       module = 'clusterroles'
-      rolebindings = 'clusterrolebindings'
+      urlParams = `scope=cluster&cluster=${params.cluster}`
     }
 
-    const roleBindingUrl = `kapis/iam.kubesphere.io/v1beta1/${rolebindings}`
-    const respRoleBindingRes = await request.get(roleBindingUrl, {
-      ...(rolebindings === 'workspacerolebindings'
-        ? {
-            params: {
-              labelSelector: `iam.kubesphere.io/user-ref=${params.name},kubesphere.io/workspace=${params.workspace}`,
-            },
-          }
-        : {}),
+    const roletemplatesUrl = `/kapis/iam.kubesphere.io/v1beta1/users/${globals.user?.username}/roletemplates?${urlParams}`
+    const resRoleTemplates = await request.get(roletemplatesUrl, {}, {}, () => {
+      return []
     })
 
-    const rolebindingsName = get(
-      respRoleBindingRes,
-      'items[0].roleRef.name',
-      ''
-    )
-    // 请求 roletemplate 聚合请求
-    const url = `kapis/iam.kubesphere.io/v1beta1${this.getPath(
-      params
-    )}/${module}/${rolebindingsName}`
-
-    const [roleResp, roletemplatesResp] = await Promise.all([
-      request.get(url),
-      request.get('/kapis/iam.kubesphere.io/v1beta1/roletemplates'),
-    ]).catch(() => {
-      return [{}, {}]
-    })
-
-    const ruleList = safeParseJSON(
-      get(
-        roleResp,
-        'metadata.annotations["iam.kubesphere.io/aggregation-roles"]',
-        []
-      ),
-      []
-    )
-
-    const roletemplatesList = get(roletemplatesResp, 'items', [])
+    const roletemplatesList = get(resRoleTemplates, 'items', [])
 
     let rules = {}
 
-    if (ruleList.length > 0) {
-      ruleList.forEach(ruleName => {
-        const roletemplate = roletemplatesList.find(
-          rolestemplate => get(rolestemplate, 'metadata.name') === ruleName
+    if (roletemplatesList.length > 0) {
+      roletemplatesList.forEach(template => {
+        const globalRuleName = get(template, 'metadata.name')
+        const roleTemplateRules = safeParseJSON(
+          get(
+            template,
+            "metadata.annotations['iam.kubesphere.io/role-template-rules']"
+          ),
+          {}
         )
 
-        if (roletemplate) {
-          const key =
-            get(
-              roletemplate,
-              'metadata.labels["iam.kubesphere.io/resource"]'
-            ) || ruleName
-          const actionTemplate = get(
-            roletemplate,
-            'metadata.labels["iam.kubesphere.io/operation"]'
-          )
+        Object.keys(roleTemplateRules).forEach(key => {
           rules[key] = rules[key] || []
-          const actions = [...rules[key], { [ruleName]: actionTemplate }]
-          rules[key] = uniq(actions)
-        }
+          if (isArray(roleTemplateRules[key])) {
+            rules[key].push(...roleTemplateRules[key], globalRuleName)
+          } else {
+            rules[key].push(roleTemplateRules[key], globalRuleName)
+          }
+          rules[key] = uniq(rules[key])
+        })
       })
     }
 
@@ -171,7 +139,7 @@ export default class UsersStore extends Base {
         const parentActions = globals.app.getActions({ module: 'clusters' })
         set(globals.user, `clusterRules[${params.cluster}]`, {
           ...rules,
-          _: intersection(parentActions, ['view', 'manage']),
+          _: uniq(parentActions),
         })
         break
       }
@@ -186,7 +154,7 @@ export default class UsersStore extends Base {
         const parentActions = globals.app.getActions({ module: 'workspaces' })
         set(globals.user, `workspaceRules[${params.workspace}]`, {
           ...rules,
-          _: intersection(parentActions, ['view', 'manage']),
+          _: uniq(parentActions),
         })
         break
       }
@@ -213,7 +181,7 @@ export default class UsersStore extends Base {
             `projectRules[${params.cluster}][${params.namespace}]`,
             {
               ...rules,
-              _: intersection(parentActions, ['view', 'manage']),
+              _: uniq(parentActions),
             }
           )
         } else if (params.devops) {
@@ -227,7 +195,7 @@ export default class UsersStore extends Base {
             `devopsRules[${params.cluster}][${params.devops}]`,
             {
               ...rules,
-              _: intersection(parentActions, ['view', 'manage']),
+              _: uniq(parentActions),
             }
           )
         }
@@ -241,7 +209,7 @@ export default class UsersStore extends Base {
   checkEmail(email) {
     return request.get(
       `${this.getListUrl()}`,
-      { email },
+      { 'fieldSelector=spec.email': email },
       {
         headers: { 'x-check-exist': true },
       }
@@ -267,7 +235,7 @@ export default class UsersStore extends Base {
   @action
   async jsonPatch({ name }, data) {
     await this.submitting(
-      request.patch(`apis/iam.kubesphere.io/v1alpha2/users/${name}`, data, {
+      request.patch(`apis/iam.kubesphere.io/v1beta1/users/${name}`, data, {
         headers: {
           'content-type': 'application/json-patch+json',
         },
@@ -309,7 +277,7 @@ export default class UsersStore extends Base {
 
     list.forEach(item => {
       const formtemplate = {
-        apiVersion: 'iam.kubesphere.io/v1alpha2',
+        apiVersion: 'iam.kubesphere.io/v1beta1',
         kind: 'User',
         ...get(item, '_originData', {}),
       }
@@ -334,7 +302,7 @@ export default class UsersStore extends Base {
   @action
   async handlechangeStatus(item) {
     const data = {
-      apiVersion: 'iam.kubesphere.io/v1alpha2',
+      apiVersion: 'iam.kubesphere.io/v1beta1',
       kind: 'User',
       ...get(item, '_originData', {}),
     }
@@ -368,7 +336,7 @@ export default class UsersStore extends Base {
     params.limit = params.limit || 10
 
     const result = await request.get(
-      `kapis/iam.kubesphere.io/v1alpha2/users/${name}/loginrecords`,
+      `kapis/iam.kubesphere.io/v1beta1/users/${name}/loginrecords`,
       params
     )
     const data = result.items.map(ObjectMapper.default)

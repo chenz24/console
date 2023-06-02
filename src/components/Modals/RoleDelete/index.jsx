@@ -78,15 +78,19 @@ export default class RoleDeleteModal extends React.Component {
       workspace,
       namespace,
     } = this.props
+
     this.setState({ isLoading: true })
+
     const users = await this.store.fetchList({
       [ROLE_QUERY_KEY[module]]: name,
       cluster,
       workspace,
       namespace,
+      limit: -1,
     })
+
     if (isEmpty(users) && workspace) {
-      const groups = await this.groupStore.getWorksapceRoleBinding('', {
+      const groups = await this.groupStore.getWorkspaceRoleBinding('', {
         cluster,
         workspace,
         namespace,

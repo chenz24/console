@@ -46,7 +46,6 @@ class WorkspaceLayout extends Component {
 
   async init(params) {
     this.store.initializing = true
-
     await Promise.all([
       this.store.fetchDetail(params),
       this.store.fetchClusters({ ...params, limit: -1 }),

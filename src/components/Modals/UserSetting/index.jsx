@@ -83,7 +83,7 @@ export default class UserSettingModal extends React.Component {
   componentDidMount() {
     this.store.fetchDetail({ name: globals.user.username }).then(() => {
       const formData = {
-        apiVersion: 'iam.kubesphere.io/v1alpha2',
+        apiVersion: 'iam.kubesphere.io/v1beta1',
         kind: 'User',
         ...cloneDeep(toJS(this.store.detail._originData)),
       }
