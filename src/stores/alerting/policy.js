@@ -132,7 +132,7 @@ export default class AlertRuleStore extends Base {
   @action
   async fetchMetadata(params) {
     const { data: targetsMetadata } = (await request.get(
-      `kapis/monitoring.kubesphere.io/v1alpha3${this.getPath(
+      `kapis/monitoring.kubesphere.io/v1beta1${this.getPath(
         params
       )}/targets/metadata`
     )) || { data: [] }
@@ -146,7 +146,7 @@ export default class AlertRuleStore extends Base {
     }
 
     const response = await request.get(
-      `kapis/monitoring.kubesphere.io/v1alpha3${this.getPath({
+      `kapis/monitoring.kubesphere.io/v1beta1${this.getPath({
         cluster,
         namespace,
       })}/targets/query`,

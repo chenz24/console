@@ -50,7 +50,7 @@ export default class CustomMonitoringTemplate {
   getPath({ cluster, namespace } = {}) {
     let path = ''
     if (cluster) {
-      path += `/klusters/${cluster}`
+      path += `/clusters/${cluster}`
     }
     if (namespace) {
       path += `/namespaces/${namespace}`
@@ -341,7 +341,7 @@ export default class CustomMonitoringTemplate {
 
   async fetchMetadata() {
     const { data: targetsMetadata } = (await request.get(
-      `kapis/monitoring.kubesphere.io/v1alpha3${this.getPath({
+      `kapis/monitoring.kubesphere.io/v1beta1${this.getPath({
         cluster: this.cluster,
         namespace: this.namespace,
       })}/targets/metadata`

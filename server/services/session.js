@@ -275,7 +275,7 @@ const getWorkspaces = async (token, clusterRole) => {
 const getKSConfig = async token => {
   let resp = {}
   try {
-    const [config, version] = await Promise.all([
+    const [config, version, enabledExtensionModules] = await Promise.all([
       send_gateway_request({
         method: 'GET',
         url: `/kapis/config.kubesphere.io/v1alpha2/configs/configz`,
@@ -286,8 +286,11 @@ const getKSConfig = async token => {
         url: `/kapis/version`,
         token,
       }),
+      getEnabledExtensionModules({ token }),
     ])
-    resp = { ...config }
+
+    resp = { ...config, ...enabledExtensionModules }
+
     if (version) {
       resp.ksVersion = version.gitVersion
     }
@@ -296,6 +299,31 @@ const getKSConfig = async token => {
   }
 
   return resp
+}
+
+const getEnabledExtensionModules = async ({ token }) => {
+  try {
+    const url = '/apis/kubesphere.io/v1alpha1/extensions'
+    const extensions = await send_gateway_request({
+      method: 'GET',
+      url,
+      token,
+    })
+
+    const enabledExtensionModules = {}
+    if (extensions && Array.isArray(extensions.items)) {
+      extensions.items.forEach(item => {
+        const name = get(item, 'metadata.name')
+        const state = get(item, 'status.state')
+        if (state === 'Enabled') {
+          enabledExtensionModules[name] = true
+        }
+      })
+    }
+    return enabledExtensionModules
+  } catch (error) {
+    return {}
+  }
 }
 
 const getK8sRuntime = async ctx => {
@@ -496,4 +524,5 @@ module.exports = {
   getClusterRole,
   getSupportGpuList,
   getGitOpsEngine,
+  getEnabledExtensionModules,
 }

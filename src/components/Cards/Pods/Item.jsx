@@ -211,7 +211,7 @@ export default class PodItem extends React.PureComponent {
   renderMonitorings() {
     const { metrics = {}, isExpand, loading } = this.props
 
-    if (!globals.app.hasKSModule('monitoring')) {
+    if (!globals.app.hasKSModule('whizard-telemetry-monitoring')) {
       return null
     }
 

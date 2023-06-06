@@ -304,7 +304,7 @@ class ResourceUsage extends React.Component {
   }
 
   renderHeader() {
-    if (!globals.app.hasKSModule('monitoring')) {
+    if (!globals.app.hasKSModule('whizard-telemetry-monitoring')) {
       return null
     }
 

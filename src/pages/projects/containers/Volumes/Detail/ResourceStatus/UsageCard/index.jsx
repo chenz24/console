@@ -143,7 +143,7 @@ export default class UsageCard extends Component {
   }
 
   renderMonitor() {
-    if (!globals.app.hasKSModule('monitoring')) {
+    if (!globals.app.hasKSModule('whizard-telemetry-monitoring')) {
       return null
     }
 
