@@ -30,7 +30,7 @@ import History from './History'
 import styles from './index.scss'
 
 const MetricTypes = {
-  cluster_count: 'kubesphere_cluser_count',
+  cluster_count: 'kubesphere_cluster_count',
   workspace_count: 'kubesphere_workspace_count',
   account_count: 'kubesphere_user_count',
   app_template_count: 'kubesphere_app_template_count',
