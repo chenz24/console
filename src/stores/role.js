@@ -55,9 +55,8 @@ export default class RoleStore extends Base {
     return path
   }
 
-  // TODO: 之后还需要调整
   getResourceUrl = params =>
-    `kapis/iam.kubesphere.io/v1beta1${this.getPath(params)}/${this.module}`
+    `kapis/iam.kubesphere.io/v1alpha2${this.getPath(params)}/${this.module}`
 
   getListUrl = this.getResourceUrl
 

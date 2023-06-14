@@ -21,7 +21,6 @@ import { get, includes } from 'lodash'
 
 import { Notify } from '@kube-design/components'
 import { Avatar } from 'components/Base'
-import Banner from 'components/Cards/Banner'
 import Table from 'components/Tables/List'
 import withList, { ListPage } from 'components/HOCs/withList'
 
@@ -191,11 +190,10 @@ export default class StorageClasses extends React.Component {
   }
 
   render() {
-    const { bannerProps, tableProps } = this.props
+    const { tableProps } = this.props
 
     return (
       <ListPage {...this.props}>
-        <Banner {...bannerProps} />
         <Table
           {...tableProps}
           itemActions={this.itemActions}
