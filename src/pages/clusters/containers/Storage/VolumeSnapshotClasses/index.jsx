@@ -2,7 +2,6 @@ import React from 'react'
 
 import withList, { ListPage } from 'components/HOCs/withList'
 import { Avatar } from 'components/Base'
-import Banner from 'components/Cards/Banner'
 import Table from 'components/Tables/List'
 import { getDisplayName, getLocalTime } from 'utils'
 
@@ -125,10 +124,9 @@ export default class VolumeSnapshotClasses extends React.Component {
   }
 
   render() {
-    const { tableProps, bannerProps } = this.props
+    const { tableProps } = this.props
     return (
       <ListPage {...this.props} noWatch>
-        <Banner {...bannerProps}></Banner>
         <Table
           {...tableProps}
           columns={this.getColumns()}

@@ -77,11 +77,6 @@ export default class Volumes extends React.Component {
   }
 
   render() {
-    return (
-      <>
-        {this.renderBanner()}
-        {renderRoutes(routes)}
-      </>
-    )
+    return <>{renderRoutes(routes)}</>
   }
 }
