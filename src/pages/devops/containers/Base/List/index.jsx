@@ -59,11 +59,13 @@ class DevOpsListLayout extends Component {
     const { match, route, location } = this.props
     const { initializing, detail } = this.props.devopsStore
 
-    const navs = globals.app.getDevOpsNavs({
+    const navs1 = globals.app.getDevOpsNavs({
       devops: this.devops,
       cluster: this.cluster,
       workspace: this.workspace,
     })
+
+    const navs = [{ cate: '', items: navs1?.[0]?.children ?? [] }]
 
     const _navs = this.isHostCluster
       ? navs

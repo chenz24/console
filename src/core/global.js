@@ -354,21 +354,33 @@ export default class GlobalValue {
     if (!this._cache_[`devops_${cluster}_${devops}_navs`]) {
       const navs = []
 
-      cloneDeep(globals.config.devopsNavs).forEach(nav => {
-        const filteredItems = nav.items.filter(item => {
-          item.cluster = cluster
-          return this.checkNavItem(item, params =>
-            this.hasPermission({ ...params, cluster, workspace, devops })
-          )
-        })
+      // cloneDeep(globals.config.devopsNavs).forEach(nav => {
+      //   const filteredItems = nav.items.filter(item => {
+      //     item.cluster = cluster
+      //     return this.checkNavItem(item, params =>
+      //       this.hasPermission({ ...params, cluster, workspace, devops })
+      //     )
+      //   })
 
-        if (!isEmpty(filteredItems)) {
-          this.checkClusterVersionRequired(filteredItems, cluster)
-          navs.push({ ...nav, items: filteredItems })
-        }
+      //   if (!isEmpty(filteredItems)) {
+      //     this.checkClusterVersionRequired(filteredItems, cluster)
+      //     navs.push({ ...nav, items: filteredItems })
+      //   }
 
-        this._cache_[`devops_${cluster}_${devops}_navs`] = navs
+      //   this._cache_[`devops_${cluster}_${devops}_navs`] = navs
+      // })
+      const clusterNavs = cloneDeep(globals.config.devopsNavs)
+      const filteredItems = clusterNavs.children.filter(item => {
+        item.cluster = cluster
+        return this.checkNavItem(item, params =>
+          this.hasPermission({ ...params, cluster, workspace, devops })
+        )
       })
+      if (!isEmpty(filteredItems)) {
+        this.checkClusterVersionRequired(filteredItems, cluster)
+        navs.push({ ...clusterNavs, children: filteredItems })
+      }
+      this._cache_[`devops_${cluster}_${devops}_navs`] = navs
     }
 
     return this._cache_[`devops_${cluster}_${devops}_navs`]
