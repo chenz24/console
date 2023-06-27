@@ -25,7 +25,7 @@ export default class DashboardStore extends Base {
   createGrafana(data, params = {}) {
     return this.submitting(
       request.post(
-        `/kapis/monitoring.kubesphere.io/v1alpha3/${this.getPath(
+        `/kapis/monitoring.kubesphere.io/v1beta1/${this.getPath(
           params
         )}/dashboards/${data.grafanaDashboardName}/template`,
         data

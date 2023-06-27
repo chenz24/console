@@ -27,7 +27,7 @@ export const MONITOR_PANEL_TYPE = {
 
 export default class PanelMonitor {
   get apiVersion() {
-    return 'kapis/monitoring.kubesphere.io/v1alpha3'
+    return 'kapis/monitoring.kubesphere.io/v1beta1'
   }
 
   /**
@@ -60,7 +60,7 @@ export default class PanelMonitor {
   getPath({ cluster, namespace } = {}) {
     let path = ''
     if (cluster) {
-      path += `/klusters/${cluster}`
+      path += `/clusters/${cluster}`
     }
     if (namespace) {
       path += `/namespaces/${namespace}`

@@ -20,7 +20,7 @@ import { observable, action } from 'mobx'
 import { get } from 'lodash'
 
 export default class LabelSets {
-  apiVersion = `kapis/monitoring.kubesphere.io/v1alpha3`
+  apiVersion = `kapis/monitoring.kubesphere.io/v1beta1`
 
   @observable
   labelsets = {}
@@ -28,7 +28,7 @@ export default class LabelSets {
   getPath({ cluster, namespace } = {}) {
     let path = ''
     if (cluster) {
-      path += `/klusters/${cluster}`
+      path += `/clusters/${cluster}`
     }
     if (namespace) {
       path += `/namespaces/${namespace}`

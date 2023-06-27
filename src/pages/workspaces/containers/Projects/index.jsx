@@ -211,7 +211,7 @@ export default class Projects extends React.Component {
       },
     ]
 
-    if (globals.app.hasKSModule('monitoring')) {
+    if (globals.app.hasKSModule('whizard-telemetry-monitoring')) {
       columns.push(
         {
           title: t('CPU_USAGE'),

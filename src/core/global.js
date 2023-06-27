@@ -118,7 +118,7 @@ export default class GlobalValue {
     action,
     actions,
   }) {
-    if (globals.config.disableAuthorization) {
+    if (window.parent.globals.config.disableAuthorization) {
       return true
     }
 
@@ -268,7 +268,7 @@ export default class GlobalValue {
   }
 
   get workspaces() {
-    return globals.user.workspaces || []
+    return window.parent.globals.user.workspaces || []
   }
 
   getWorkspaceNavs(workspace) {
@@ -324,7 +324,7 @@ export default class GlobalValue {
       // })
 
       // const navs = [];
-      const clusterNavs = cloneDeep(globals.config.projectNavs)
+      const clusterNavs = cloneDeep(window.parent.globals.config.projectNavs)
       const filteredItems = clusterNavs.children.filter(item => {
         item.cluster = cluster
         return this.checkNavItem(item, params =>
@@ -343,7 +343,7 @@ export default class GlobalValue {
   }
 
   getFederatedProjectNavs() {
-    return globals.config.federatedProjectNavs
+    return window.parent.globals.config.federatedProjectNavs
   }
 
   getDevOpsNavs({ cluster, workspace, devops }) {
@@ -396,8 +396,8 @@ export default class GlobalValue {
 
   checkClusterVersionRequired(navs, cluster) {
     const ksVersion = this.isMultiCluster
-      ? get(globals, `clusterConfig.${cluster}.ksVersion`)
-      : get(globals, 'ksConfig.ksVersion')
+      ? get(window.parent.globals, `clusterConfig.${cluster}.ksVersion`)
+      : get(window.parent.globals, 'ksConfig.ksVersion')
 
     navs.forEach(item => {
       if (
@@ -423,18 +423,18 @@ export default class GlobalValue {
   }
 
   get isMultiCluster() {
-    return globals.ksConfig.multicluster.clusterRole !== 'none'
+    return window.parent.globals.ksConfig.multicluster.clusterRole !== 'none'
   }
 
   hasKSModule(module) {
-    return get(globals, `ksConfig["${module}"]`)
+    return get(window.parent.globals, `ksConfig["${module}"]`)
   }
 
   hasClusterModule(cluster, module) {
     if (!this.isMultiCluster) {
       return this.hasKSModule(module)
     }
-    return get(globals, `clusterConfig.${cluster}["${module}"]`)
+    return get(window.parent.globals, `clusterConfig.${cluster}["${module}"]`)
   }
 
   cacheHistory(url, obj) {
